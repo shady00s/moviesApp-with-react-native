@@ -1,30 +1,29 @@
 import React from "react";
-import {ImageBackground, Text ,View,StyleSheet} from "react-native";
+import {ImageBackground, Text ,View,StyleSheet,FlatList} from "react-native";
 import { ProfileHeader } from "../components/profileHeader";
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { CategoriesContainer } from "../components/categoriesContainer";
-import { MovieSlider } from "../components/movieSlider";
-const TopTab = createMaterialTopTabNavigator();
+import { ListOfMovies } from "../components/newMoviesSlider";
 
 export function HomePage(){
     return (
-        <>
+       
         <View style={style.parent}>
             <ImageBackground style={style.image} resizeMode="cover" source={require("../assets/images/group3.png")}>
             {/* Profile */}
             <ProfileHeader userName={"shady"}/>
 
              {/* movies categories button Group */}
-            <View style={{flex:1 ,paddingTop:80}}>
-            <CategoriesContainer/>
+            <View style={{flex:1,paddingTop:80}}>
+                <CategoriesContainer/>
 
-            <MovieSlider/>
+            <ListOfMovies/>
+              
             </View>
             
             </ImageBackground>
         </View>
        
-        </>
+
         
         
     )

@@ -1,6 +1,8 @@
 import React, { FC, useState, useEffect } from "react";
 
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, Dimensions } from "react-native";
+import { whiteColor } from "../constants/Colors";
+import { pinkColor } from '../constants/Colors';
 
 
 export function CategoriesContainer() {
@@ -11,9 +13,10 @@ export function CategoriesContainer() {
 
     return (
 
-        <View style={{ backgroundColor: "transparent" }}>
+        <View style={{ backgroundColor: "transparent" ,paddingBottom:30}}>
 
             <FlatList
+                keyExtractor={()=>(Math.random()*100).toString()}
                 horizontal
                 data={catName}
                 renderItem={(item) => <CategoryButton testFunc={() => {
@@ -50,7 +53,7 @@ const CategoryButton: FC<{ testFunc: () => void, title: string, index: number }>
 
 const style = StyleSheet.create({
     title: {
-        color: 'white',
+        color: whiteColor,
         paddingVertical: 12,
         paddingHorizontal: 20,
         fontSize: 20, fontFamily: "lato-regular"
@@ -64,6 +67,6 @@ const style = StyleSheet.create({
         width: 80,
         height: 2,
 
-        backgroundColor: "rgb(255, 145, 255)"
+        backgroundColor: pinkColor
     }
 })

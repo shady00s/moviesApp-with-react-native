@@ -10,7 +10,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 
-import Colors from '../constants/Colors';
 import { HomePage } from '../screens/homeScreen';
 
 
