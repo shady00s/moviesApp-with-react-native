@@ -1,15 +1,21 @@
 import React from "react";
 import { ImageBackground, TouchableOpacity, View,Text,StyleSheet,Dimensions } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { blackColor, whiteColor } from "../constants/Colors";
+import { blackColor, darkGreyColor, whiteColor } from "../constants/Colors";
+import { lightGreyColor } from './../constants/Colors';
 const List = ["DSAD","SD","DFDFASF"]
 export function ListOfMovies(){
-    return(<FlatList
+    return(<View>
+        <FlatList
             horizontal
             scrollEnabled
             data={List}
             renderItem={()=><MoviesContainer/>}
-        />)
+        /> 
+        <View style={style.indecatorContainer}>
+                {List.map((e)=><View style={style.ballIndicator}></View>)}
+                </View>
+    </View>   )
 }
 
 function MoviesContainer(){
@@ -35,14 +41,16 @@ function MoviesContainer(){
 const style = StyleSheet.create({
     mainContainer:{
         padding:5,
-        width:Dimensions.get('screen').width *0.7
-        ,height:Dimensions.get('screen').height *0.3
+        width:Dimensions.get('screen').width *0.81
+        ,height:Dimensions.get('screen').height *0.35
     },
    
     textContainer:{
         backgroundColor:blackColor,
         height:"35%",
-        justifyContent:"space-evenly"
+        justifyContent:"space-evenly",
+        borderBottomLeftRadius:13.5,
+        borderBottomRightRadius:13.5,
     },
     title:{
         paddingHorizontal:10,
@@ -53,10 +61,25 @@ const style = StyleSheet.create({
     },
     subTitle:{
         width:"90%",
-        height:"40%",
+        height:"45%",
         paddingHorizontal:12,
         color:whiteColor,
         fontFamily:"lato-regular",
         overflow:"hidden"
     }
+    
+    ,ballIndicator:{
+        width:10,
+        height:10,
+        borderRadius:10/2,
+        backgroundColor:lightGreyColor,
+        margin: 10,
+    },
+    indecatorContainer:{
+        marginTop:15,
+        flexDirection:"row",
+        justifyContent:"center"
+    }
+
+
 })

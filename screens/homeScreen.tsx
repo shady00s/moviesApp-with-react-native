@@ -1,8 +1,11 @@
 import React from "react";
-import {ImageBackground, Text ,View,StyleSheet,FlatList} from "react-native";
+import {ImageBackground, Text ,View,StyleSheet,FlatList, ScrollView} from "react-native";
 import { ProfileHeader } from "../components/profileHeader";
 import { CategoriesContainer } from "../components/categoriesContainer";
 import { ListOfMovies } from "../components/newMoviesSlider";
+import { TitleComponent } from "../components/titleComponent";
+import { MoviesCategoriesListComponent } from "../components/moviesCategoriesComponent";
+import { MoviesListComponent } from "../components/moviesListComponent";
 
 export function HomePage(){
     return (
@@ -13,10 +16,17 @@ export function HomePage(){
             <ProfileHeader userName={"shady"}/>
 
              {/* movies categories button Group */}
-            <View style={{flex:1,paddingTop:80}}>
+            <View style={{flex:1,paddingTop:40}}>
                 <CategoriesContainer/>
 
-            <ListOfMovies/>
+                <ScrollView>
+                     <ListOfMovies/>
+                     <TitleComponent title={"Categories"} allButton={false} />
+                     <MoviesCategoriesListComponent/>
+                     <TitleComponent title={"Recommended for you"} allButton={true} />
+                    < MoviesListComponent />
+                </ScrollView>
+            
               
             </View>
             

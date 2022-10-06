@@ -11,6 +11,7 @@ import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 
 import { HomePage } from '../screens/homeScreen';
+import { HomePageNavigation } from './mainScreenNavigation';
 
 
 export default function Navigation() {
@@ -31,7 +32,7 @@ const Stack = createNativeStackNavigator();
 function RootNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="homePage" component={HomePage} options={{ headerShown: false }} />
+      <Stack.Screen name="mainPage" component={HomePageNavigation} options={{ headerShown: false }} />
       
     </Stack.Navigator>
   );

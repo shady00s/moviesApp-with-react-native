@@ -3,6 +3,7 @@ import React, { FC, useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, Dimensions } from "react-native";
 import { whiteColor } from "../constants/Colors";
 import { pinkColor } from '../constants/Colors';
+import { darkGreyColor } from './../constants/Colors';
 
 
 export function CategoriesContainer() {
@@ -26,7 +27,8 @@ export function CategoriesContainer() {
                 }} title={item.item} index={item.index === isActive ? 1 : 0} />}
 
             />
-
+                
+           
 
         </View>);
 }
