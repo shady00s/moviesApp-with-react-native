@@ -34,6 +34,8 @@ function RootNavigator() {
     <Stack.Navigator>
       <Stack.Screen name="mainPage" component={HomePageNavigation} options={{ headerShown: false }} />
       
+
+      
     </Stack.Navigator>
   );
 }
