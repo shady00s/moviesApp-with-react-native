@@ -14,7 +14,7 @@ export const MoviesListComponent = ()=>{
             scrollEnabled
             showsHorizontalScrollIndicator={false}
                 data={test}
-                renderItem={(item)=><MovieContainer title={''} subTitle={''} rating={0} id={''}/>}
+                renderItem={(item)=><MovieContainer key={item.item} title={''} subTitle={''} rating={0} id={''}/>}
             />
         </View>
     )
