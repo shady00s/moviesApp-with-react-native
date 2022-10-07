@@ -1,5 +1,5 @@
 import React, { useRef ,useEffect,useState} from "react";
-import { ImageBackground, TouchableOpacity, View,Text,StyleSheet,Dimensions,Animated } from "react-native";
+import { Image, TouchableOpacity, View,Text,StyleSheet,Dimensions,Animated } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { blackColor, darkGreyColor, pinkColor, whiteColor } from "../constants/Colors";
 import { lightGreyColor } from './../constants/Colors';
@@ -39,14 +39,7 @@ export function ListOfMovies(){
             scrollEnabled
             data={List}
             centerContent={true}
-            onScroll={(event) => {
-               
-                clearTimeout(timer)
-               
-                console.log(event.target.valueOf("key"))
-             
-                // work with: index
-            }}
+           
             renderItem={(item)=><MoviesContainer key={item.index}/>}
 
         /> 
@@ -61,13 +54,13 @@ function MoviesContainer(){
         return(
         <TouchableOpacity onPress={()=>{}}>
                 <View style={style.mainContainer}>
-                <ImageBackground imageStyle={{borderRadius:15}} style={{width:"100%",height:"100%",justifyContent:"flex-end", }} resizeMode="cover" source={require("../assets/images/icon.png")}>
+                <Image  style={{width:"100%",height:"95%",borderRadius:15}} resizeMode="stretch" source={require("../assets/images/icon.png")}/>
                 
                     <View style={style.textContainer}>
                         <Text style={style.title}>The batman</Text>
                         <Text style={style.subTitle}>The batman ddsasfasdfsadfsadfsdfsadfsafdsdsdfsafsdfdsafsadfsadfsafasfsafafsadfsadfasf</Text>
                     </View>
-                </ImageBackground>
+                
         </View>
         </TouchableOpacity>
     
@@ -78,13 +71,18 @@ function MoviesContainer(){
 
 const style = StyleSheet.create({
     mainContainer:{
+        borderRadius:15,
         paddingVertical:5,
         paddingHorizontal:10,
-        width:Dimensions.get('screen').width *0.81
+        width:Dimensions.get('screen').width *0.86
         ,height:Dimensions.get('screen').height *0.35
     },
    
     textContainer:{
+        position:"absolute",
+        width:"100%",
+        right:10,
+        bottom:15,
         backgroundColor:blackColor,
         height:"35%",
         justifyContent:"space-evenly",
@@ -100,7 +98,7 @@ const style = StyleSheet.create({
     },
     subTitle:{
         width:"90%",
-        height:"45%",
+        height:"50%",
         paddingHorizontal:12,
         color:whiteColor,
         fontFamily:"lato-regular",
