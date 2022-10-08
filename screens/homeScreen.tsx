@@ -16,10 +16,13 @@ export function HomePage(){
             <ProfileHeader userName={"shady"}/>
 
              {/* movies categories button Group */}
-            <View style={{flex:1,paddingTop:40}}>
-                <CategoriesContainer/>
+            <View style={{flex:1,paddingTop:40,}}>
+                <View style={{justifyContent:"center",alignItems:"center",height:80}}>
+                <CategoriesContainer catName={ ["Movies", "Series", "Cartoon"]}/>
 
-                <ScrollView>
+                </View>
+
+                <ScrollView centerContent={true}>
                      <ListOfMovies/>
                      <TitleComponent title={"Categories"} allButton={false} />
                      <MoviesCategoriesListComponent/>
@@ -41,6 +44,7 @@ export function HomePage(){
 
 const style = StyleSheet.create({
     parent:{
+        
         backgroundColor:"rgb(15,15,15)",
         width:"100%",
         height:"100%",

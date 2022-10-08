@@ -9,37 +9,30 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { blackColor } from '../constants/Colors';
 import { pinkColor, lightGreyColor } from './../constants/Colors';
 import { useState } from 'react';
+import { MyMoviesScreen } from '../screens/myMoviesScreen';
 const BottomTab = createBottomTabNavigator()
 
 
 
 export function HomePageNavigation(){
     return(
-        <BottomTab.Navigator tabBar={()=><BottomNavBar/>}>
+        <BottomTab.Navigator tabBar={()=><NavButtons/>}>
             <BottomTab.Screen name="HomeScreen" component={HomePage} options={{ headerShown: false }} />
-            <BottomTab.Screen name="ProfilePage" component={ProfileScreen} options={{ headerShown: false }} />
-        
+            <BottomTab.Screen name="ProfileScreen" component={ProfileScreen} options={{ headerShown: false }} />
+            <BottomTab.Screen name="MyMoviesScreen" component={MyMoviesScreen} options={{ headerShown: false }} />
         
         </BottomTab.Navigator>
     )
 }
 
-function BottomNavBar(){
 
-   
-    return(<View >
-
-
-                <NavButtons/>
-        
-    </View>)
-}
 
 function NavButtons(){
     const [isActive,setIsActive]= useState<number>(0)
     type BottomnavigationList = {
         HomeScreen:undefined,
         ProfilePage:undefined,
+        MyMoviesScreen:undefined
         Details:{data:string}
     }
 
@@ -50,13 +43,13 @@ function NavButtons(){
     type navListType = {name:any,title:string,iconName:string}
 const navList:navListType[] = [
     {name:"HomeScreen",iconName:"home",title:"Home"},
-    {name:"ProfilePage",iconName:"star",title:"My Movies"},
-    {name:"HomeScreen",iconName:"person",title:"Profile"}]
+    {name:"MyMoviesScreen",iconName:"ios-play-circle-outline",title:"My Movies"},
+    {name:"ProfileScreen",iconName:"person",title:"Profile"}]
 
     
     return(
         <View style={style.mainContainer}>
-             { navList.map((element,index)=> <TouchableOpacity onPress={()=>{
+             { navList.map((element,index)=> <TouchableOpacity key={index} onPress={()=>{
                  setIsActive(index)
              
                  navigator.navigate(element.name
@@ -65,7 +58,7 @@ const navList:navListType[] = [
                }>
         { isActive===index? <View style={style.indecator}></View>:null} 
         <View>
-            <Icon color={lightGreyColor} name={element.iconName}/>
+            <Icon  type={element.iconName === "ios-play-circle-outline"? "ionicon":""} color={lightGreyColor} name={element.iconName}/>
             <Text style={style.title}>
                 {element.title}
             </Text>

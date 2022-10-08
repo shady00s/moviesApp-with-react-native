@@ -6,19 +6,19 @@ import { pinkColor } from '../constants/Colors';
 import { darkGreyColor } from './../constants/Colors';
 
 
-export function CategoriesContainer() {
+export const CategoriesContainer:FC<{catName:string[]}>=({catName})=> {
 
-    const catName: string[] = ["Movies", "Series", "Cartoon"]
 
     const [isActive, setIsActive] = useState(0)
 
     return (
 
-        <View style={{ backgroundColor: "transparent" ,paddingBottom:30}}>
+        <View style={{ backgroundColor: "transparent" }}>
 
             <FlatList
                 keyExtractor={()=>(Math.random()*100).toString()}
                 horizontal
+                centerContent
                 data={catName}
                 renderItem={(item) => <CategoryButton testFunc={() => {
                     setIsActive(item.index)
@@ -40,11 +40,12 @@ const CategoryButton: FC<{ testFunc: () => void, title: string, index: number }>
 
     return (
         <TouchableOpacity
+            style={style.container}
             key={index}
             onPress={(item) => {
                 testFunc()
             }}>
-            <View style={style.container}>
+            <View style={{width:"100%",justifyContent:"center",alignItems:"center" }}>
                 <Text style={style.title}>{title}</Text>
 
                 <View style={index === 1 ? style.indexContainer : { backgroundColor: 'transparent' }}></View>
@@ -55,18 +56,22 @@ const CategoryButton: FC<{ testFunc: () => void, title: string, index: number }>
 
 const style = StyleSheet.create({
     title: {
+       
         color: whiteColor,
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        fontSize: 20, fontFamily: "lato-regular"
+        paddingVertical: 8,
+        paddingHorizontal: 18,
+        fontSize: 18, fontFamily: "lato-regular"
 
     }, container: {
-        width: Dimensions.get("screen").width * 0.33,
+        height:100,
+        justifyContent:"space-evenly",
+        paddingBottom:30,
+       
         alignItems: "center",
     },
 
     indexContainer: {
-        width: 80,
+        width: "100%",
         height: 2,
 
         backgroundColor: pinkColor
