@@ -71,7 +71,8 @@ const style = StyleSheet.create({
     },
 
     indexContainer: {
-        width: "100%",
+        width: "86%",
+        margin:"auto",
         height: 2,
 
         backgroundColor: pinkColor

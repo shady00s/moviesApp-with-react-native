@@ -85,10 +85,11 @@ const style = StyleSheet.create({
     },
     optionsMenu:{
         position:'absolute',
+        justifyContent:"center",
         top: 10,
-        left:-170,
+        left:-190,
         backgroundColor:darkGreyColor,
-        width:160,
+        width:180,
         padding:10,
         borderRadius:6
 
