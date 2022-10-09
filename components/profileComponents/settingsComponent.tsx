@@ -3,7 +3,7 @@ import React, { FC } from "react"
 import { TitleComponent } from "../titleComponent";
 import { lightGreyColor, whiteColor } from './../../constants/Colors';
 import { OptionsComponent } from "../smallMovieComponent";
-export function PersonalDataComponent() {
+export function SettingsDataComponent() {
     return (
         <View style={{width:Dimensions.get("screen").width}}>
             <TitleComponent title={"My data"} allButton={false} />

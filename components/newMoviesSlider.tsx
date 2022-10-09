@@ -1,30 +1,30 @@
-import React, { useRef ,useEffect,useState} from "react";
-import { Image, TouchableOpacity, View,Text,StyleSheet,Dimensions,Animated } from "react-native";
+import React, { useRef ,useEffect,useState, useMemo} from "react";
+import { Image, TouchableOpacity, View,Text,StyleSheet,Dimensions,Animated, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { blackColor, darkGreyColor, pinkColor, whiteColor } from "../constants/Colors";
 import { lightGreyColor } from './../constants/Colors';
 const List = ["DSAD","SD","DFDFASF"]
 export function ListOfMovies(){
     let int:number = 0;
-    let index = 0
-    const [initialNumber,setInitialNumber]= useState<number>(0)
+    const [initialNumber,setInitialNumber]= useState<number>(1);
+    const [timerVal,setTimerVal]=useState<number>(4000)
     const listRef = useRef<FlatList>(null);
-    let timer: string | number | NodeJS.Timeout | undefined ;
+    let timer:NodeJS.Timeout |number | undefined;
+
+
+
     useEffect(()=>{
-     timer =  setInterval(()=>{
-            int++
-            
-           
+     timer  = setInterval(()=>{
+        int++
+        if(int > List.length){
+            int = 0
+        }else{
+            listRef.current?.scrollToIndex({animated:true,index:int-1})
 
-            if(int > List.length){
-                int = 0
-            }else{
-                listRef.current?.scrollToIndex({animated:true,index:int-1})
-
-                setInitialNumber(int)
-            }
-            
-        },4000)
+            setInitialNumber(int)
+        }
+        
+    },timerVal);
        return ()=>clearTimeout(timer)
     },[])
 
@@ -33,19 +33,30 @@ export function ListOfMovies(){
 
     return(<View>
         <FlatList
-        
         ref={listRef}
+        automaticallyAdjustContentInsets={true}
+        contentContainerStyle={{flexGrow: 1,alignItems:"center", justifyContent: 'center'}}
+        pagingEnabled
             horizontal
             scrollEnabled
             data={List}
             centerContent={true}
-           
+            onScroll={(event:NativeSyntheticEvent<NativeScrollEvent>)=>
+               
+                {
+                    // to stop the automatic scrolling
+                   
+                    setInitialNumber(Math.round((event.nativeEvent.contentOffset.x / Dimensions.get("screen").width))+1)
+                    setTimerVal(5500)
+                 
+                
+                }}
             renderItem={(item)=><MoviesContainer key={item.index}/>}
 
         /> 
-        <Animated.View style={style.indecatorContainer}>
-                {List.map((e,index)=><View key={e} style={initialNumber-1 ===index? style.activeBallIndecator :style.ballIndicator}></View>)}
-                </Animated.View>
+     {useMemo(()=><Animated.View style={style.indecatorContainer}>
+                {List.map((e,index)=><View key={e} style={initialNumber-1 === index? style.activeBallIndecator :style.ballIndicator}></View>)}
+                </Animated.View>,[initialNumber])}   
     </View>   )
 }
 
@@ -73,15 +84,16 @@ const style = StyleSheet.create({
     mainContainer:{
         borderRadius:15,
         paddingVertical:5,
-        paddingHorizontal:10,
-        width:Dimensions.get('screen').width *0.86
-        ,height:Dimensions.get('screen').height *0.35
+        paddingHorizontal:8,
+        marginHorizontal:5,
+        width:Dimensions.get('screen').width *0.97
+        ,height:Dimensions.get('screen').height *0.378
     },
    
     textContainer:{
         position:"absolute",
         width:"100%",
-        right:10,
+        right:8,
         bottom:15,
         backgroundColor:blackColor,
         height:"35%",
