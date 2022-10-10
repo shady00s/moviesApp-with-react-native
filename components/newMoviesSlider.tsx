@@ -3,6 +3,7 @@ import { Image, TouchableOpacity, View,Text,StyleSheet,Dimensions,Animated, Nati
 import { FlatList } from "react-native-gesture-handler";
 import { blackColor, darkGreyColor, pinkColor, whiteColor } from "../constants/Colors";
 import { lightGreyColor } from './../constants/Colors';
+import { useNavigation } from '@react-navigation/native';
 const List = ["DSAD","SD","DFDFASF"]
 export function ListOfMovies(){
     let int:number = 0;
@@ -26,7 +27,7 @@ export function ListOfMovies(){
         
     },timerVal);
        return ()=>clearTimeout(timer)
-    },[])
+    },[timerVal])
 
  
 
@@ -54,16 +55,16 @@ export function ListOfMovies(){
             renderItem={(item)=><MoviesContainer key={item.index}/>}
 
         /> 
-     {useMemo(()=><Animated.View style={style.indecatorContainer}>
+                <Animated.View style={style.indecatorContainer}>
                 {List.map((e,index)=><View key={e} style={initialNumber-1 === index? style.activeBallIndecator :style.ballIndicator}></View>)}
-                </Animated.View>,[initialNumber])}   
+                </Animated.View> 
     </View>   )
 }
 
 function MoviesContainer(){
-    
+    const navigator = useNavigation<any>()
         return(
-        <TouchableOpacity onPress={()=>{}}>
+        <TouchableOpacity onPress={()=>{navigator.navigate('movieScreen')}}>
                 <View style={style.mainContainer}>
                 <Image  style={{width:"100%",height:"95%",borderRadius:15}} resizeMode="stretch" source={require("../assets/images/icon.png")}/>
                 

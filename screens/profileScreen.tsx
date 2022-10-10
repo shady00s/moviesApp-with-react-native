@@ -1,5 +1,7 @@
-import { useMemo, useState } from "react";
-import { Text, View, StyleSheet, Dimensions, ScrollView, FlatList, NativeScrollEvent, NativeSyntheticEvent } from "react-native";
+import React, { useRef } from "react";
+import {useState } from "react";
+import { Text, View, StyleSheet, Dimensions, ScrollView,  NativeScrollEvent, NativeSyntheticEvent } from "react-native";
+import { AppBar } from "../components/appBarComponent";
 import { PersonalDataComponent } from "../components/profileComponents/personalDataComponent";
 import { PurchasesDataComponent } from "../components/profileComponents/purchasesComponent";
 import { SettingsDataComponent } from "../components/profileComponents/settingsComponent";
@@ -11,25 +13,32 @@ let index:number = 0;
 
 export function ProfileScreen() {
     const [index,setIndex] = useState<number>(0)
-
+    const settingRef = useRef(null)
     let x = 0;
-    useMemo(()=>{return setIndex(x)},[x]) 
 
+    //ref={ (settingRef)=> settingRef?.scrollTo({animated:true,x:0,y:2}) }
+
+   
     return (
         <View style={style.mainContianer}>
+            <AppBar title={""} iconName={""} path={""} secButton={false} isTransparent={false}/>
             <Text style={style.title}>Profile</Text>
             <View style={{ height: 80, padding: 3 }}>
-                <CategoriesContainer catName={["Personal data", "My purchases", "Settings"]} />
+                
+                <CategoriesContainer catName={["Personal data", "My purchases", "Settings"]} index={index} />
+
+              
 
             </View>
 
             <ScrollView>
+               
                 <ScrollView
                 
                 onScroll={(event:NativeSyntheticEvent<NativeScrollEvent>)=> {
                      x = Math.round(event.nativeEvent.contentOffset.x / Dimensions.get("screen").width)
                     setIndex(x)
-                     console.log(x)
+                    
                   }}
                     pagingEnabled
                     horizontal>
@@ -38,6 +47,9 @@ export function ProfileScreen() {
                     <SettingsDataComponent />
                     <PurchasesDataComponent />
                 </ScrollView>
+                
+                
+              
             </ScrollView>
 
 
@@ -60,7 +72,7 @@ const style = StyleSheet.create({
         fontFamily: "lato-bold",
         fontSize: 21,
         color: whiteColor,
-        paddingTop: Dimensions.get("screen").height * 0.1,
+        paddingTop: Dimensions.get("screen").height * 0.05,
         paddingBottom: 20,
     }
 })

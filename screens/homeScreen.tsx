@@ -18,7 +18,7 @@ export function HomePage(){
              {/* movies categories button Group */}
             <View style={{flex:1,paddingTop:40,}}>
                 <View style={{justifyContent:"center",alignItems:"center",height:80}}>
-                <CategoriesContainer catName={ ["Movies", "Series", "Cartoon"]}/>
+                <CategoriesContainer catName={["Movies", "Series", "Cartoon"]} index={null}/>
 
                 </View>
 

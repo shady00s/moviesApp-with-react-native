@@ -12,6 +12,7 @@ import { ColorSchemeName, Pressable } from 'react-native';
 
 import { HomePage } from '../screens/homeScreen';
 import { HomePageNavigation } from './mainScreenNavigation';
+import { MovieDetailsScreen } from './../screens/movieDetailsScreen';
 
 
 export default function Navigation() {
@@ -33,6 +34,7 @@ function RootNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="mainPage" component={HomePageNavigation} options={{ headerShown: false }} />
+      <Stack.Screen name="movieScreen" component={MovieDetailsScreen} options={{ headerShown: false }} />
       
 
       

@@ -1,4 +1,5 @@
 import { View,Text,StyleSheet, Dimensions ,FlatList } from "react-native";
+import { AppBar } from "../components/appBarComponent";
 
 import { CategoriesContainer } from "../components/categoriesContainer";
 import { blackColor, whiteColor } from "../constants/Colors";
@@ -9,9 +10,11 @@ const Test = ["sdsd","sdsd","sdsd","sdsd","sdsd","sdsd","sdsd","sdsd","sdsd","sd
 export function MyMoviesScreen(){
     return(<>
     <View style={style.mainContainer}>
+    <AppBar title={""} iconName={""} path={""} secButton={false} isTransparent={false}/>
             <Text style={style.title}>My Movies</Text>
             <View style={{height:65}}>
-                <CategoriesContainer catName={ ["Purchases", "Downloads", "My list"]}/>
+                
+                <CategoriesContainer catName={["Purchases", "Downloads", "My list"]} index={null}/>
 
             </View>
             <View style={{width:"100%",height:"88%"}}>  
@@ -42,7 +45,7 @@ const style = StyleSheet.create({
         fontFamily:"lato-bold",
         fontSize:21,
         color:whiteColor,
-        paddingTop:Dimensions.get("screen").height *0.1,
+        paddingTop:Dimensions.get("screen").height *0.05,
         paddingBottom:20,
     }
 })

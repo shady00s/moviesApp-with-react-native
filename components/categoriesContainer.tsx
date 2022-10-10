@@ -3,16 +3,18 @@ import React, { FC, useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, Dimensions } from "react-native";
 import { whiteColor } from "../constants/Colors";
 import { pinkColor } from '../constants/Colors';
-import { darkGreyColor } from './../constants/Colors';
 
 
-export const CategoriesContainer:FC<{catName:string[]}>=({catName})=> {
+export const CategoriesContainer:FC<{catName:string[],index:number|null}>=({catName,index})=> {
 
 
     const [isActive, setIsActive] = useState(0)
+   
 
+    useEffect(()=> setIsActive(index === null? 0 : index),[index]);
     return (
 
+        
         <View style={{ backgroundColor: "transparent" }}>
 
             <FlatList
@@ -21,10 +23,13 @@ export const CategoriesContainer:FC<{catName:string[]}>=({catName})=> {
                 centerContent
                 data={catName}
                 renderItem={(item) => <CategoryButton testFunc={() => {
-                    setIsActive(item.index)
 
 
-                }} title={item.item} index={item.index === isActive ? 1 : 0} />}
+
+                    setIsActive(item.index);
+
+
+                } } title={item.item} index={item.index === isActive ? 1 : 0} currentIndex={item.index} />}
 
             />
                 
@@ -34,16 +39,19 @@ export const CategoriesContainer:FC<{catName:string[]}>=({catName})=> {
 }
 
 
-const CategoryButton: FC<{ testFunc: () => void, title: string, index: number }> = ({ title, index, testFunc }) => {
+const CategoryButton: FC<{ testFunc: () => void, title: string, index: number,currentIndex:number }> = ({currentIndex, title, index, testFunc }) => {
 
-
-
+    const [current,setCurrent]=useState<number>(currentIndex)
+   
     return (
-        <TouchableOpacity
+       
+             <TouchableOpacity
             style={style.container}
             key={index}
             onPress={(item) => {
                 testFunc()
+                setCurrent(currentIndex)
+                
             }}>
             <View style={{width:"100%",justifyContent:"center",alignItems:"center" }}>
                 <Text style={style.title}>{title}</Text>
@@ -51,6 +59,7 @@ const CategoryButton: FC<{ testFunc: () => void, title: string, index: number }>
                 <View style={index === 1 ? style.indexContainer : { backgroundColor: 'transparent' }}></View>
             </View>
         </TouchableOpacity>
+       
     )
 }
 
