@@ -1,5 +1,5 @@
 import React from "react";
-import {ImageBackground, Text ,View,StyleSheet,FlatList, ScrollView} from "react-native";
+import {ImageBackground, Text ,View,StyleSheet,FlatList, ScrollView, Dimensions} from "react-native";
 import { ProfileHeader } from "../components/profileHeader";
 import { CategoriesContainer } from "../components/categoriesContainer";
 import { ListOfMovies } from "../components/newMoviesSlider";
@@ -7,22 +7,23 @@ import { TitleComponent } from "../components/titleComponent";
 import { MoviesCategoriesListComponent } from "../components/moviesCategoriesComponent";
 import { MoviesListComponent } from "../components/moviesListComponent";
 
+const {width,height} = Dimensions.get("screen")
 export function HomePage(){
     return (
        
         <View style={style.parent}>
-            <ImageBackground style={style.image} resizeMode="cover" source={require("../assets/images/group3.png")}>
+            <ImageBackground style={style.image} resizeMode="stretch" source={require("../assets/images/group3.png")}>
             {/* Profile */}
             <ProfileHeader userName={"shady"}/>
 
              {/* movies categories button Group */}
-            <View style={{flex:1,paddingTop:40,}}>
+            <View style={{paddingTop:10}}>
                 <View style={{justifyContent:"center",alignItems:"center",height:80}}>
                 <CategoriesContainer catName={["Movies", "Series", "Cartoon"]} index={null}/>
 
                 </View>
 
-                <ScrollView centerContent={true}>
+                <ScrollView  style={{height:height >=850 ? height*0.68:height*0.61}} centerContent={true}>
                      <ListOfMovies/>
                      <TitleComponent title={"Categories"} allButton={false} />
                      <MoviesCategoriesListComponent/>
@@ -44,14 +45,16 @@ export function HomePage(){
 
 const style = StyleSheet.create({
     parent:{
-        
-        backgroundColor:"rgb(15,15,15)",
-        width:"100%",
-        height:"100%",
-       flex:1
+        paddingTop:20,
+      height:"90%",
+       flex:0.9
     },image:{
-       
-        flex:1
+        position:"absolute",
+       top:-20,
+        left:-10,
+        width:Dimensions.get("screen").width +20,
+        height:Dimensions.get("screen").height,
+
     },navigatorStyle:{
         backgroundColor:"red"
     }

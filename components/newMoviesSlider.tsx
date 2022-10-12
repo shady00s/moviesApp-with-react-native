@@ -7,7 +7,8 @@ import { useNavigation } from '@react-navigation/native';
 const List = ["DSAD","SD","DFDFASF"]
 export function ListOfMovies(){
     let int:number = 0;
-    const [initialNumber,setInitialNumber]= useState<number>(1);
+    const [initialNumber,setInitialNumber]= useState<number>(0);
+    const [scrollIndex,setScrollIndex] = useState<number>(0)
     const [timerVal,setTimerVal]=useState<number>(4000)
     const listRef = useRef<FlatList>(null);
     let timer:NodeJS.Timeout |number | undefined;
@@ -29,7 +30,9 @@ export function ListOfMovies(){
        return ()=>clearTimeout(timer)
     },[timerVal])
 
- 
+    useEffect(()=>{
+        setInitialNumber(scrollIndex)
+    },[scrollIndex])
 
 
     return(<View>
@@ -45,18 +48,17 @@ export function ListOfMovies(){
             onScroll={(event:NativeSyntheticEvent<NativeScrollEvent>)=>
                
                 {
-                    // to stop the automatic scrolling
-                   
-                    setInitialNumber(Math.round((event.nativeEvent.contentOffset.x / Dimensions.get("screen").width))+1)
                     setTimerVal(5500)
-                 
+                    // to stop the automatic scrolling
+                   let x = Math.round((event.nativeEvent.contentOffset.x / Dimensions.get("screen").width))          
+                    setScrollIndex(x)
                 
                 }}
             renderItem={(item)=><MoviesContainer key={item.index}/>}
 
         /> 
                 <Animated.View style={style.indecatorContainer}>
-                {List.map((e,index)=><View key={e} style={initialNumber-1 === index? style.activeBallIndecator :style.ballIndicator}></View>)}
+                {List.map((e,index)=><View key={e} style={initialNumber === index? style.activeBallIndecator :style.ballIndicator}></View>)}
                 </Animated.View> 
     </View>   )
 }

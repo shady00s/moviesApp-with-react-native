@@ -1,29 +1,56 @@
 import React, { useRef } from "react";
-import {useState } from "react";
-import { Text, View, StyleSheet, Dimensions, ScrollView,  NativeScrollEvent, NativeSyntheticEvent } from "react-native";
+import { useState } from "react";
+import { Text, View, StyleSheet, Dimensions, ScrollView, NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import { AppBar } from "../components/appBarComponent";
-import { PersonalDataComponent } from "../components/profileComponents/personalDataComponent";
+import { DataComponent, PersonalDataComponent } from "../components/profileComponents/personalDataComponent";
 import { PurchasesDataComponent } from "../components/profileComponents/purchasesComponent";
 import { SettingsDataComponent } from "../components/profileComponents/settingsComponent";
+import { SliderComponent } from "../components/sliderComponent";
 import { blackColor, whiteColor } from "../constants/Colors";
 import { CategoriesContainer } from './../components/categoriesContainer';
 
 
-let index:number = 0;
+let index: number = 0;
 
 export function ProfileScreen() {
-    const [index,setIndex] = useState<number>(0)
+    const [index, setIndex] = useState<number>(0)
     const settingRef = useRef(null)
     let x = 0;
 
     //ref={ (settingRef)=> settingRef?.scrollTo({animated:true,x:0,y:2}) }
 
-   
+
     return (
         <View style={style.mainContianer}>
-            <AppBar title={""} iconName={""} path={""} secButton={false} isTransparent={false}/>
+            <AppBar title={""} iconName={""} path={""} secButton={false} isTransparent={false} />
             <Text style={style.title}>Profile</Text>
-            <View style={{ height: 80, padding: 3 }}>
+
+
+
+
+            <SliderComponent titleList={["sad", "sda", "dsasdad"]} widgetsList={[
+               <PersonalDataComponent/>,
+               <PurchasesDataComponent/>
+               ,<SettingsDataComponent/>
+
+
+
+
+
+
+            ]} />
+
+
+
+
+
+
+
+
+
+
+
+            {/* <View style={{ height: 80, padding: 3 }}>
                 
                 <CategoriesContainer catName={["Personal data", "My purchases", "Settings"]} index={index} />
 
@@ -54,7 +81,7 @@ export function ProfileScreen() {
 
 
 
-
+ */}
 
 
         </View>
