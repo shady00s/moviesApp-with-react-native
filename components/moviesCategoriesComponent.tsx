@@ -1,7 +1,8 @@
 import React, { FC, useState } from "react"
 import { View,Text,StyleSheet ,FlatList,Animated,TouchableOpacity } from "react-native"
 import { darkGreyColor, pinkColor, whiteColor } from '../constants/Colors';
-export function MoviesCategoriesListComponent(){
+import { MoviesCategory } from "../models/movieModel";
+export const  MoviesCategoriesListComponent:FC<{catList:MoviesCategory[]}>=({catList})=>{
 
     const [isActive, setIsActive] = useState(0)
     return(
@@ -9,10 +10,10 @@ export function MoviesCategoriesListComponent(){
             horizontal
             scrollEnabled
             showsHorizontalScrollIndicator={false}
-            data={["ad","f","we","fdsfsa","Fds","d"]}
-            renderItem={(item)=><CategoryComponent title={item.item} onPressed={function (): void {
-                setIsActive(item.index)
-            } } isActive={item.index === isActive?1:0}/>}
+            data={catList}
+            renderItem={({item,index})=><CategoryComponent title={item.name} onPressed={function (): void {
+                setIsActive(index)
+            } } isActive={index === isActive?1:0}/>}
         />
     )
 }

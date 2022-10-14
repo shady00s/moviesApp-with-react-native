@@ -20,6 +20,7 @@
     "@reduxjs/toolkit": "^1.8.6",
     "@rneui/base": "^4.0.0-rc.6",
     "@rneui/themed": "^4.0.0-rc.6",
+    "axios": "^1.1.2",
     "expo": "~46.0.13",
     "expo-asset": "~8.6.1",
     "expo-constants": "~13.2.4",

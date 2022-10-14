@@ -4,9 +4,13 @@ import useCachedResources from './hooks/useCachedResources';
 import Navigation from './navigation';
 import { store } from './redux/store';
 import { Provider } from 'react-redux';
+
+
 export default function App() {
 
  let isLoaded:boolean =  useCachedResources() 
+
+
  if (isLoaded) {
   return (
     <Provider store={store}>
@@ -23,4 +27,8 @@ export default function App() {
   }
 
 
+
+function dispatch(arg0: any) {
+  throw new Error('Function not implemented.');
+}
 

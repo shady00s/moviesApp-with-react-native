@@ -5,37 +5,38 @@ import {View,Text,FlatList,StyleSheet,Dimensions,ImageBackground,TouchableOpacit
 import { Icon } from '@rneui/themed';
 import { whiteColor } from '../constants/Colors';
 import { darkGreyColor, lightGreyColor } from './../constants/Colors';
+import { PopularMoviesList } from './../models/movieModel';
 const test = ["sda","dsa,","DSADASD","sda","dsa,","DSADASD","sda","dsa,","DSADASD"]
-export const MoviesListComponent = ()=>{
+export const MoviesListComponent:FC<{moviesList:PopularMoviesList[]}> = ({moviesList})=>{
     return(
         <View>
             <FlatList
             horizontal
             scrollEnabled
             showsHorizontalScrollIndicator={false}
-                data={test}
-                renderItem={(item)=><MovieContainer key={item.item} title={''} subTitle={''} rating={0} id={''}/>}
+                data={moviesList}
+                renderItem={({item,index}:{item:PopularMoviesList,index:number})=><MovieContainer key={index} title={item.title} subTitle={item.overview} rating={item.vote_average} id={item.id} imagePath={item.poster_path}/>}
             />
         </View>
     )
 } 
 
-const MovieContainer:FC<{title:string,subTitle:string,rating:number,id:string}>=()=>{
+const MovieContainer:FC<{title:string,subTitle:string,rating:number,id:number,imagePath:string}>=({title,subTitle,rating,id,imagePath})=>{
     return(
     <TouchableOpacity style={style.mainContainer}>
-            <ImageBackground style={{width:"95%",height:"90%",}} imageStyle={{borderRadius:15}} resizeMode='contain' source={require("../assets/images/icon.png")}>
+            <ImageBackground style={{width:"95%",height:"90%",}} imageStyle={{borderRadius:15}} resizeMode='contain' source={{uri:`https://image.tmdb.org/t/p/w500${imagePath}`}}>
                 
                 <View style={style.IconCotainer}>
                     <Icon size={10} name='star-fill'type='octicon' color={whiteColor} />
-                    <Text style={{color:whiteColor}}>23</Text>
+                    <Text style={{color:whiteColor}}>{rating}</Text>
                     </View>
                 
                     
                 
             </ImageBackground>
                 <View style={{marginTop:-12,marginLeft:5}}>
-                    <Text style={style.title}>sdfsfsdf</Text>
-                    <Text style={style.subTitle} >sdfsfsdf</Text>
+                    <Text style={style.title}>{title}</Text>
+                    <Text style={style.subTitle} >{subTitle}</Text>
                 </View>
     </TouchableOpacity>)
 }

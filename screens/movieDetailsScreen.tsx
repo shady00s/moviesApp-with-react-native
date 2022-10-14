@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Image, SafeAreaView, ScrollView, Platform, StatusBar, Dimensions, TouchableOpacity, FlatList } from "react-native";
 import { AppBar } from "../components/appBarComponent";
 import { blackColor, lightGreyColor, whiteColor } from "../constants/Colors";
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { darkGreyColor, pinkColor } from './../constants/Colors';
 import { Icon } from "@rneui/base";
 import { TitleComponent } from "../components/titleComponent";
@@ -35,7 +35,7 @@ export function MovieDetailsScreen() {
                     <TopCastList list={["ptTfQvbu9Ko", "h5qqI1-ZHwg", "QW-XHbEVmbk"]}/>
 
                     <TitleComponent title={"Related Movies"} allButton={false} />
-                        <MoviesListComponent/>
+                        <MoviesListComponent moviesList={[]}/>
                 </ScrollView>
 
             </View>

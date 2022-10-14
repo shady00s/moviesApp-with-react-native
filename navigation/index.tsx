@@ -3,19 +3,24 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import { FontAwesome } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+ import React, { useEffect } from 'react';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as React from 'react';
-import { ColorSchemeName, Pressable } from 'react-native';
 
-import { HomePage } from '../screens/homeScreen';
 import { HomePageNavigation } from './mainScreenNavigation';
 import { MovieDetailsScreen } from './../screens/movieDetailsScreen';
 
+import { homePageThunk } from '../redux/thunk/homePageThunk';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../redux/store';
 
 export default function Navigation() {
+  const dispatch = useDispatch<AppDispatch>()
+  
+  useEffect(()=>{
+    
+    dispatch(homePageThunk())
+  } ,[])
   return (
     <NavigationContainer>
       

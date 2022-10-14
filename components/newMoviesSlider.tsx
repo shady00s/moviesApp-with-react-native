@@ -1,16 +1,18 @@
-import React, { useRef ,useEffect,useState, useMemo} from "react";
-import { Image, TouchableOpacity, View,Text,StyleSheet,Dimensions,Animated, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
+import React, { useRef ,useEffect,useState, useMemo, FC} from "react";
+import { Image, TouchableOpacity, View,Text,StyleSheet,Dimensions,Animated, NativeSyntheticEvent, NativeScrollEvent, Pressable } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { blackColor, darkGreyColor, pinkColor, whiteColor } from "../constants/Colors";
 import { lightGreyColor } from './../constants/Colors';
 import { useNavigation } from '@react-navigation/native';
-const List = ["DSAD","SD","DFDFASF"]
-export function ListOfMovies(){
+import { MovieModel } from './../models/movieModel';
+export const ListOfMovies:FC<{listOfMovies:MovieModel[]}> = ({listOfMovies})=>{
     let int:number = 0;
     const [initialNumber,setInitialNumber]= useState<number>(0);
     const [scrollIndex,setScrollIndex] = useState<number>(0)
     const [timerVal,setTimerVal]=useState<number>(4000)
     const listRef = useRef<FlatList>(null);
+
+
     let timer:NodeJS.Timeout |number | undefined;
 
 
@@ -18,12 +20,13 @@ export function ListOfMovies(){
     useEffect(()=>{
      timer  = setInterval(()=>{
         int++
-        if(int > List.length){
+        if(int > listOfMovies!.length){
             int = 0
         }else{
+            setInitialNumber(int)
             listRef.current?.scrollToIndex({animated:true,index:int-1})
 
-            setInitialNumber(int)
+            
         }
         
     },timerVal);
@@ -35,15 +38,13 @@ export function ListOfMovies(){
     },[scrollIndex])
 
 
-    return(<View>
+    return(<View style={{justifyContent:"center",alignItems:"center"}}>
         <FlatList
         ref={listRef}
-        automaticallyAdjustContentInsets={true}
-        contentContainerStyle={{flexGrow: 1,alignItems:"center", justifyContent: 'center'}}
         pagingEnabled
             horizontal
             scrollEnabled
-            data={List}
+            data={listOfMovies}
             centerContent={true}
             onScroll={(event:NativeSyntheticEvent<NativeScrollEvent>)=>
                
@@ -54,25 +55,37 @@ export function ListOfMovies(){
                     setScrollIndex(x)
                 
                 }}
-            renderItem={(item)=><MoviesContainer key={item.index}/>}
+            renderItem={({item,index}:{item:MovieModel,index:number},)=><MoviesContainer key={index} name={item.title} discription={item.overview} imageLink={item.poster_path} id={item.id}/>}
 
         /> 
-                <Animated.View style={style.indecatorContainer}>
-                {List.map((e,index)=><View key={e} style={initialNumber === index? style.activeBallIndecator :style.ballIndicator}></View>)}
-                </Animated.View> 
+    
+        <View style={style.indecatorContainer}>
+                {listOfMovies.map((e,index)=><TouchableOpacity onPress={()=>{
+                    
+                    setTimerVal(5500)
+                    setInitialNumber(index)
+                    listRef.current?.scrollToIndex({animated:true,index:index})
+                    
+                    
+                    }}><Animated.View key={e.id} style={initialNumber === index? style.activeBallIndecator :style.ballIndicator}></Animated.View></TouchableOpacity>)}
+                </View>
+        
+                 
     </View>   )
 }
 
-function MoviesContainer(){
+const  MoviesContainer:FC<{name:string,discription:string,imageLink:string,id:number}>=({name,imageLink,id,discription})=>{
     const navigator = useNavigation<any>()
         return(
-        <TouchableOpacity onPress={()=>{navigator.navigate('movieScreen')}}>
+        <TouchableOpacity onPress={()=>{navigator.navigate('movieScreen',{movieID:id})}}>
                 <View style={style.mainContainer}>
-                <Image  style={{width:"100%",height:"95%",borderRadius:15}} resizeMode="stretch" source={require("../assets/images/icon.png")}/>
+                <Image  style={{width:"100%",height:"95%",borderRadius:15}} resizeMode="stretch" 
                 
-                    <View style={style.textContainer}>
-                        <Text style={style.title}>The batman</Text>
-                        <Text style={style.subTitle}>The batman ddsasfasdfsadfsadfsdfsadfsafdsdsdfsafsdfdsafsadfsadfsafasfsafafsadfsadfasf</Text>
+                source={{uri:`https://image.tmdb.org/t/p/w500${imageLink}`}}/>
+                
+                    <View style={style.textContainer} >
+                        <Text style={style.title}>{name}</Text>
+                        <Text style={style.subTitle}>{discription}</Text>
                     </View>
                 
         </View>
@@ -88,9 +101,9 @@ const style = StyleSheet.create({
         borderRadius:15,
         paddingVertical:5,
         paddingHorizontal:8,
-        marginHorizontal:5,
+        marginLeft:15,
         width:Dimensions.get('screen').width *0.97
-        ,height:Dimensions.get('screen').height *0.378
+        ,height:Dimensions.get('screen').height *0.478
     },
    
     textContainer:{
@@ -109,7 +122,8 @@ const style = StyleSheet.create({
         color:whiteColor,
         fontFamily:"lato-bold",
         fontWeight:"300",
-        fontSize:19
+        fontSize:19,
+        letterSpacing:1.1
     },
     subTitle:{
         width:"90%",
@@ -135,9 +149,12 @@ const style = StyleSheet.create({
         margin: 10,
     },
     indecatorContainer:{
+        width:"90%",
+        flexWrap:"wrap",
         marginTop:15,
         flexDirection:"row",
-        justifyContent:"center"
+        justifyContent:"center",
+       
     }
 
 
