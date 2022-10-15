@@ -10,17 +10,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomePageNavigation } from './mainScreenNavigation';
 import { MovieDetailsScreen } from './../screens/movieDetailsScreen';
 
-import { homePageThunk } from '../redux/thunk/homePageThunk';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../redux/store';
+
 
 export default function Navigation() {
-  const dispatch = useDispatch<AppDispatch>()
+
+
   
-  useEffect(()=>{
-    
-    dispatch(homePageThunk())
-  } ,[])
+
   return (
     <NavigationContainer>
       

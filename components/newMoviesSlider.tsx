@@ -5,6 +5,7 @@ import { blackColor, darkGreyColor, pinkColor, whiteColor } from "../constants/C
 import { lightGreyColor } from './../constants/Colors';
 import { useNavigation } from '@react-navigation/native';
 import { MovieModel } from './../models/movieModel';
+import { imageURL } from "../constats";
 export const ListOfMovies:FC<{listOfMovies:MovieModel[]}> = ({listOfMovies})=>{
     let int:number = 0;
     const [initialNumber,setInitialNumber]= useState<number>(0);
@@ -81,7 +82,7 @@ const  MoviesContainer:FC<{name:string,discription:string,imageLink:string,id:nu
                 <View style={style.mainContainer}>
                 <Image  style={{width:"100%",height:"95%",borderRadius:15}} resizeMode="stretch" 
                 
-                source={{uri:`https://image.tmdb.org/t/p/w500${imageLink}`}}/>
+                source={{uri:`${imageURL + imageLink}`}}/>
                 
                     <View style={style.textContainer} >
                         <Text style={style.title}>{name}</Text>

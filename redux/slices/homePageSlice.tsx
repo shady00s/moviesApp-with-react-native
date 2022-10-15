@@ -57,6 +57,6 @@ export const homePageSlice = createSlice({
     },
 })  
 
-export const selectStatus = (state: RootState) =>
+export const homePageStatus = (state: RootState) =>
   state.homePageReducer;
 export const homePageReducer = homePageSlice.reducer

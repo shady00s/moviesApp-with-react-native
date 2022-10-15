@@ -7,20 +7,30 @@ import { TitleComponent } from "../components/titleComponent";
 import { MoviesCategoriesListComponent } from "../components/moviesCategoriesComponent";
 import { MoviesListComponent } from "../components/moviesListComponent";
 import {  useTypedSelector } from "../redux/store";
-import {selectStatus } from '../redux/slices/homePageSlice';
+import {homePageStatus } from '../redux/slices/homePageSlice';
 import { MovieModel } from './../models/movieModel';
 
+import { homePageThunk } from '../redux/thunk/homePageThunk';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../redux/store';
 
 const {width,height} = Dimensions.get("screen")
 export function HomePage(){
 
+    const dispatch = useDispatch<AppDispatch>()
+  
+    const status = useTypedSelector(homePageStatus);
 
-const status = useTypedSelector(selectStatus);
+    useEffect(()=>{
+        dispatch(homePageThunk())
+    },[])
+
 
 const [topRatedMoviesList,setTopRatedMoviesList] = useState<MovieModel[]>([])
 
+
     useEffect(()=>{
-      
+        
     setTopRatedMoviesList(()=> status.PopularMoviesList)
 
 
