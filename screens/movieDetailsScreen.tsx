@@ -13,67 +13,84 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch, useTypedSelector} from "../redux/store";
 import { movieDetailsThunk } from './../redux/thunk/movieDetailsThunk';
 import { movieDetailsStatus } from "../redux/slices/movieDetailsSlice";
-import { imageURL } from './../constats';
+import { bigImageURL, imageURL } from './../constats';
 import { geners, MovieModel,  SingleMovieModel, Trailer } from "../models/movieModel";
 import { Casting } from './../models/movieModel';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { width, height } = Dimensions.get("screen")
 export function MovieDetailsScreen() {
 
 
-const [movieDetails,setMovieDetails] = useState<SingleMovieModel>()
+const [movieDetails,setMovieDetails] = useState<SingleMovieModel |null>(null)
+const [similarMovies,setSimilarMovies] = useState<MovieModel[] >([])
 
-const [similarMovies,setSimilarMovies]= useState<MovieModel>()
 
 
     const dispatch = useDispatch<any>()
-    const navigation = useNavigation()
+  
     const route = useRoute<any>()
     const movieID:number = route.params.movieID
-   
+
     const state = useTypedSelector(movieDetailsStatus);
 
     useEffect(()=>
     {
         dispatch(movieDetailsThunk(movieID))},[ ])
+
     useEffect(()=>{
 
-
+        setMovieDetails(()=>state.movieDetails)
+        setSimilarMovies(()=>state.similarMovies)
+       
     },[state.status])
-   
+    
+
+    // async function saveToLocalStorage(){
+    //     try {
+    //         await AsyncStorage.setItem("prevMovieID",movieID.toString())
+    //     }catch(err){
+    //         console.log(err);
+    //     }
+    // }
+    console.log(movieDetails)
 
   
     
   
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <View style={style.mainContainer}>
-                <ScrollView>
+        <>
+                {  state.status === "loading" ? <View></View> :  <SafeAreaView style={{ flex: 1 }}>
+        <View style={style.mainContainer}>
+            <ScrollView>
 
-                    <View style={{ position: 'absolute', width: "100%" }}>
-                        <AppBar title={""} iconName={""} path={""} secButton={false} isTransparent={true} />
-                    </View>
-                    <Image style={style.image} source={{uri : imageURL+ state.movieDetails?.backdrop_path}} />
+                <View style={{ position: 'absolute', width: "100%" }}>
+                    <AppBar title={""} iconName={""} path={""} secButton={false} isTransparent={true} />
+                </View>
+                <Image resizeMode="cover" style={style.image} source={{uri : bigImageURL+ movieDetails?.poster_path}} />
 
-                    <Text style={style.title}>{state.movieDetails?.title}</Text>
-                  {state.status === "succsses" ? <MovieCategory titles={state.movieDetails!.genres} /> : <View></View> }  
-                    <MovieOptionsButtonsList movieID={"asdasd"} />
+                <Text style={style.title}>{movieDetails?.title}</Text>
+              {state.status === "succsses" ? <MovieCategory titles={movieDetails?.genres} /> : <View></View> }  
+                <MovieOptionsButtonsList movieID={"asdasd"} />
 
-                    {state.status === "succsses" ? <TitleComponent title={"Trailers"} allButton={true} /> : <View></View> }
+                {state.status === "succsses" ? <TitleComponent title={"Trailers"} allButton={true} /> : <View></View> }
 
-                    <YoutubeVidList urlData={state.movieDetails!.trailers} />
-                    <TitleComponent title={"Audience Score"} allButton={false} />
-                    <AudinceContainer list={["ptTfQvbu9Ko", "h5qqI1-ZHwg", "QW-XHbEVmbk"]} />
+                <YoutubeVidList urlData={movieDetails?.trailers} />
+                <TitleComponent title={"Audience Score"} allButton={false} />
+                <AudinceContainer list={["ptTfQvbu9Ko", "h5qqI1-ZHwg", "QW-XHbEVmbk"]} />
 
-                    <TitleComponent title={"Top Cast"} allButton={false} />
-                    <TopCastList list={state.movieDetails!.casting}/>
+                <TitleComponent title={"Top Cast"} allButton={false} />
+                <TopCastList list={movieDetails?.casting}/>
 
-                    <TitleComponent title={"Related Movies"} allButton={false} />
-                        <MoviesListComponent moviesList={[]}/>
-                </ScrollView>
+                <TitleComponent title={"Related Movies"} allButton={false} />
+                    <MoviesListComponent moviesList={similarMovies}/>
+            </ScrollView>
 
-            </View>
-        </SafeAreaView>
+        </View>
+    </SafeAreaView>}
+        
+        </>
+
+       
 
 
     )
@@ -81,10 +98,10 @@ const [similarMovies,setSimilarMovies]= useState<MovieModel>()
 
 
 
-const MovieCategory: FC<{ titles: geners[] }> = ({ titles }) => {
+const MovieCategory: FC<{ titles: geners[] | undefined}> = ({ titles }) => {
     return (
         <View style={{ padding: 10, flexWrap: 'wrap', flexDirection: "row" }}>
-            {titles.map((e) => <Text key={e.id} style={{ borderRadius: 20, marginVertical: 5, marginHorizontal: 10, color: whiteColor, backgroundColor: darkGreyColor, fontFamily: 'lato-regular', paddingVertical: 10, paddingHorizontal: 24 }}>{e.name}</Text>)}
+            {titles?.map((e) => <Text key={e.id} style={{ borderRadius: 20, marginVertical: 5, marginHorizontal: 10, color: whiteColor, backgroundColor: darkGreyColor, fontFamily: 'lato-regular', paddingVertical: 10, paddingHorizontal: 24 }}>{e.name}</Text>)}
         </View>
 
 
@@ -111,7 +128,7 @@ const MovieOptionsButtonsList: FC<{ movieID: string }> = ({ movieID }) => {
     )
 }
 
-const YoutubeVidList: FC<{ urlData: Trailer[] }> = ({ urlData }) => {
+const YoutubeVidList: FC<{ urlData: Trailer[] | undefined}> = ({ urlData }) => {
     return (
         <View>
             <FlatList
@@ -120,7 +137,7 @@ const YoutubeVidList: FC<{ urlData: Trailer[] }> = ({ urlData }) => {
                 scrollEnabled
                 pagingEnabled
                 data={urlData}
-                renderItem={(item) => <YoutubeVidContainer id={item.item.key} />
+                renderItem={(item) => <YoutubeVidContainer key={item.index} id={item.item.key} />
                 }
             />
         </View>
@@ -169,7 +186,7 @@ const AudinceContainer: FC<{ list: string[] }> = ({ list }) => {
     )
 }
 
-const TopCastList:FC<{list:Casting[]}>=({list})=>{
+const TopCastList:FC<{list:Casting[]|undefined}>=({list})=>{
     return(
         <FlatList
         scrollEnabled
@@ -193,7 +210,7 @@ const TopCastContainer = () => {
     return (
         <>
         <View style={{width:width * 0.8,margin:5,height:60,alignItems:'center',flexDirection:"row"}}>
-            <Image style={{ width: "20%", height: "100%", borderRadius: 21 }} source={require("../assets/images/icon.png")} />
+            <Image resizeMode="contain" style={{ width: "20%", height: "100%", borderRadius: 21 }} source={require("../assets/images/icon.png")} />
 
             <View style={{ paddingLeft: 15 }}>
                 <Text style={{ color: whiteColor, fontFamily: "lato-regular" }}>
@@ -221,7 +238,7 @@ const style = StyleSheet.create({
 
         top: 60,
         width: "100%",
-        height: Dimensions.get('screen').height * 0.4
+        height: Dimensions.get('screen').height * 0.7
     }, title: {
         padding: 20,
         fontFamily: "lato-bold",

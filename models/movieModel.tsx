@@ -1,5 +1,6 @@
 
 
+
     export interface MovieModel {
         adult: boolean;
         backdrop_path: string;
@@ -23,11 +24,28 @@
         name: string;
     }
 
-    export interface    MoviesData {
-        popularMoviesList: MovieModel[];
-        recommendedMoviesList: MovieModel[];
-        topRatedMoviesList: MovieModel[];
-        moviesCategories: MoviesCategory[];
+    export interface MoviesData {
+       
+            popularMoviesList: MovieModel[];
+            recommendedMoviesList: MovieModel[];
+            topRatedMoviesList: MovieModel[];
+            moviesCategories: MoviesCategory[];
+        
+        
+    }
+
+    export interface TVDataModel{
+        popularTvList: TvSHowModel[],
+        recommendedTvList:TvSHowModel[],
+        topRatedTvList:TvSHowModel[],
+        tvCategories:TvCategory[],
+    }
+
+ 
+    export interface HomePageModel{
+        moviesData:MoviesData,
+        tvShowsData: TVDataModel,
+        cartoonsData:CartoonsData
     }
 
     export interface TvSHowModel {
@@ -73,7 +91,7 @@
         cartoonsData: CartoonsData;
     }
 
-    export interface HomePageRootModel {
+    export interface RootModel {
         message: string;
         body: Body;
     }

@@ -6,6 +6,8 @@ import { lightGreyColor } from './../constants/Colors';
 import { useNavigation } from '@react-navigation/native';
 import { MovieModel } from './../models/movieModel';
 import { imageURL } from "../constats";
+
+
 export const ListOfMovies:FC<{listOfMovies:MovieModel[]}> = ({listOfMovies})=>{
     let int:number = 0;
     const [initialNumber,setInitialNumber]= useState<number>(0);
@@ -42,6 +44,7 @@ export const ListOfMovies:FC<{listOfMovies:MovieModel[]}> = ({listOfMovies})=>{
     return(<View style={{justifyContent:"center",alignItems:"center"}}>
         <FlatList
         ref={listRef}
+        keyExtractor={(item)=>item.backdrop_path}
         pagingEnabled
             horizontal
             scrollEnabled
@@ -56,7 +59,7 @@ export const ListOfMovies:FC<{listOfMovies:MovieModel[]}> = ({listOfMovies})=>{
                     setScrollIndex(x)
                 
                 }}
-            renderItem={({item,index}:{item:MovieModel,index:number},)=><MoviesContainer key={index} name={item.title} discription={item.overview} imageLink={item.poster_path} id={item.id}/>}
+            renderItem={({item,index}:{item:MovieModel,index:number},)=><MoviesContainer key={item.backdrop_path} name={item.title} discription={item.overview} imageLink={item.backdrop_path} id={item.id}/>}
 
         /> 
     
@@ -80,7 +83,7 @@ const  MoviesContainer:FC<{name:string,discription:string,imageLink:string,id:nu
         return(
         <TouchableOpacity onPress={()=>{navigator.navigate('movieScreen',{movieID:id})}}>
                 <View style={style.mainContainer}>
-                <Image  style={{width:"100%",height:"95%",borderRadius:15}} resizeMode="stretch" 
+                <Image  style={{width:"100%",height:"70%",borderRadius:15}} resizeMode="cover" 
                 
                 source={{uri:`${imageURL + imageLink}`}}/>
                 

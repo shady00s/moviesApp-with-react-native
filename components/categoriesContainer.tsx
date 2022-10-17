@@ -5,7 +5,7 @@ import { whiteColor } from "../constants/Colors";
 import { pinkColor } from '../constants/Colors';
 
 
-export const CategoriesContainer:FC<{catName:string[],index:number|null}>=({catName,index})=> {
+export const CategoriesContainer:FC<{catName:string[],index:number|null,onPress:()=>void}>=({catName,index,onPress})=> {
 
 
     const [isActive, setIsActive] = useState(0)
@@ -24,7 +24,7 @@ export const CategoriesContainer:FC<{catName:string[],index:number|null}>=({catN
                 data={catName}
                 renderItem={(item) => <CategoryButton testFunc={() => {
 
-
+                        onPress()
 
                     setIsActive(item.index);
 

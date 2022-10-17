@@ -5,38 +5,42 @@ import {View,Text,FlatList,StyleSheet,Dimensions,ImageBackground,TouchableOpacit
 import { Icon } from '@rneui/themed';
 import { whiteColor } from '../constants/Colors';
 import { darkGreyColor, lightGreyColor } from './../constants/Colors';
-import { PopularMoviesList } from './../models/movieModel';
+import { MovieModel } from './../models/movieModel';
+import { useNavigation } from '@react-navigation/native';
 const test = ["sda","dsa,","DSADASD","sda","dsa,","DSADASD","sda","dsa,","DSADASD"]
-export const MoviesListComponent:FC<{moviesList:PopularMoviesList[]}> = ({moviesList})=>{
+export const MoviesListComponent:FC<{moviesList:MovieModel[]}> = ({moviesList})=>{
     return(
-        <View>
+        <View  style={{height:420}}>
             <FlatList
             horizontal
             scrollEnabled
             showsHorizontalScrollIndicator={false}
                 data={moviesList}
-                renderItem={({item,index}:{item:PopularMoviesList,index:number})=><MovieContainer key={index} title={item.title} subTitle={item.overview} rating={item.vote_average} id={item.id} imagePath={item.poster_path}/>}
+                renderItem={({item,index}:{item:MovieModel,index:number})=><MovieContainer key={index} title={item.title} subTitle={item.release_date} rating={item.vote_average} id={item.id} imagePath={item.poster_path}/>}
             />
         </View>
     )
 } 
 
 const MovieContainer:FC<{title:string,subTitle:string,rating:number,id:number,imagePath:string}>=({title,subTitle,rating,id,imagePath})=>{
+    const navigator = useNavigation<any>()
+    
+    
     return(
-    <TouchableOpacity style={style.mainContainer}>
+    <TouchableOpacity style={style.mainContainer} onPress={()=> navigator.push('movieScreen',{movieID:id})}>
             <ImageBackground style={{width:"95%",height:"90%",}} imageStyle={{borderRadius:15}} resizeMode='contain' source={{uri:`https://image.tmdb.org/t/p/w500${imagePath}`}}>
                 
                 <View style={style.IconCotainer}>
                     <Icon size={10} name='star-fill'type='octicon' color={whiteColor} />
-                    <Text style={{color:whiteColor}}>{rating}</Text>
+                    <Text style={{paddingHorizontal:5,color:whiteColor}}>{rating}</Text>
                     </View>
                 
                     
                 
             </ImageBackground>
-                <View style={{marginTop:-12,marginLeft:5}}>
+                <View style={{marginTop:-12,marginLeft:5,justifyContent:"space-between"}}>
                     <Text style={style.title}>{title}</Text>
-                    <Text style={style.subTitle} >{subTitle}</Text>
+                    <Text style={style.subTitle} >{ " release date  "+subTitle }</Text>
                 </View>
     </TouchableOpacity>)
 }
@@ -44,11 +48,11 @@ const MovieContainer:FC<{title:string,subTitle:string,rating:number,id:number,im
 const style = StyleSheet.create({
     mainContainer:{
         margin:10,
-        height:Dimensions.get("screen").height*0.33,
+        height:Dimensions.get("screen").height*0.35,
         width:Dimensions.get("screen").width*0.5,
     },
     IconCotainer:{
-        width:"28%",
+        
         flexDirection:"row",
         paddingHorizontal:8,
         alignItems:"center",
@@ -59,11 +63,13 @@ const style = StyleSheet.create({
         backgroundColor:darkGreyColor,
         borderRadius:10,
     },title:{
+        paddingBottom:10,
         color:whiteColor,
         fontFamily:'lato-bold',
         fontSize:17
     },
     subTitle:{
+
         paddingTop:3,
         color:lightGreyColor,
         fontFamily:'lato-regular',
