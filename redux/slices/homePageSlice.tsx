@@ -74,6 +74,7 @@ export const homePageSlice = createSlice({
     });
     builder.addCase(homePageThunk.fulfilled, (state, { payload }) => {
       // movies data
+      state.movieData.trendingMoviesList = payload.moviesData.trendingMoviesList;
       state.movieData.PopularMoviesList = payload.moviesData.popularMoviesList;
       state.movieData.RecommendedMoviesList = payload.moviesData.recommendedMoviesList;
       state.movieData.TopRatedMoviesList = payload.moviesData.topRatedMoviesList;

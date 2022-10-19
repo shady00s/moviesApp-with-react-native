@@ -24,6 +24,7 @@ export const IntroSelectionMovieScreen : FC<{}> = ()=>{
                 <Text style={style.subTitle}>Pick 5 movies you like .Your experience will improve the more you stream</Text>
              
              
+             
              <IntroSelectMovieList moviesList={state.moviesList}/>
              </View>
         </View>

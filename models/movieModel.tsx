@@ -25,7 +25,7 @@
     }
 
     export interface MoviesData {
-       
+            trendingMoviesList: MovieModel[];
             popularMoviesList: MovieModel[];
             recommendedMoviesList: MovieModel[];
             topRatedMoviesList: MovieModel[];

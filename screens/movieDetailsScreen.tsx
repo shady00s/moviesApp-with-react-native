@@ -8,9 +8,9 @@ import { TitleComponent } from "../components/titleComponent";
 import YoutubeIframe from "react-native-youtube-iframe";
 import { useState } from 'react';
 import  MoviesListComponent  from "../components/moviesListComponent";
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {  useRoute } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
-import { AppDispatch, useTypedSelector} from "../redux/store";
+import {  useTypedSelector} from "../redux/store";
 import { movieDetailsThunk } from './../redux/thunk/movieDetailsThunk';
 import { movieDetailsStatus } from "../redux/slices/movieDetailsSlice";
 import { bigImageURL, imageURL } from './../constats';
@@ -59,7 +59,7 @@ const [similarMovies,setSimilarMovies] = useState<MovieModel[] >([])
   
     return (
         <>
-                {  state.status === "loading" ? <View></View> :  <SafeAreaView style={{ flex: 1 }}>
+                {  state.status === "loading" && movieDetails !== null ? <View></View> :  <SafeAreaView style={{ flex: 1 }}>
         <View style={style.mainContainer}>
             <ScrollView>
 
@@ -79,7 +79,7 @@ const [similarMovies,setSimilarMovies] = useState<MovieModel[] >([])
                 <AudinceContainer list={["ptTfQvbu9Ko", "h5qqI1-ZHwg", "QW-XHbEVmbk"]} />
 
                 <TitleComponent title={"Top Cast"} allButton={false} />
-                <TopCastList list={movieDetails?.casting}/>
+                <TopCastList list={movieDetails?.casting }/>
 
                 <TitleComponent title={"Related Movies"} allButton={false} />
                     <MoviesListComponent moviesList={similarMovies}/>
@@ -186,43 +186,63 @@ const AudinceContainer: FC<{ list: string[] }> = ({ list }) => {
     )
 }
 
-const TopCastList:FC<{list:Casting[]|undefined}>=({list})=>{
+const TopCastList:FC<{list:  Casting[] | undefined }>=({list})=>{
+    const state = useTypedSelector(movieDetailsStatus);
+        let testList = list === undefined ? [] : list
     return(
+        <ScrollView
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                pagingEnabled
+                contentContainerStyle={{flexWrap:"wrap",flexDirection:"row"}}
+                
+                >
         <FlatList
         scrollEnabled
-        horizontal
-        
-        contentContainerStyle={{justifyContent:"flex-start"}}
-            data={list}
-
-            renderItem={(item)=> <View style={{width: "25%",}}>
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        pagingEnabled
+        numColumns={ 5 }
+  
+        data={list}
+ 
+            renderItem={(item)=>
+            
                 
-                <TopCastContainer/>
-                <TopCastContainer/>
-                <TopCastContainer/>
+                     <View >
                 
-                </View>}
+                <TopCastContainer cast={item.item}/>
+               
+                
+                </View>
+               
+                }
+               
+           
         />
+         </ScrollView>
     )
 }
 
-const TopCastContainer = () => {
+const TopCastContainer:FC<{cast:Casting}> = ({cast}) => {
     return (
-        <>
-        <View style={{width:width * 0.8,margin:5,height:60,alignItems:'center',flexDirection:"row"}}>
-            <Image resizeMode="contain" style={{ width: "20%", height: "100%", borderRadius: 21 }} source={require("../assets/images/icon.png")} />
+       
+        <View style={{width, margin:5,height:60,alignItems:'center',flexDirection:"row"}}>
+            <Image resizeMode="contain" style={{ width: "20%", height: "100%", borderRadius: 21 }}
+             source={{uri:imageURL+ cast.profile_path}} />
 
             <View style={{ paddingLeft: 15 }}>
                 <Text style={{ color: whiteColor, fontFamily: "lato-regular" }}>
-                    iMDb Rating
+                    {cast.original_name}
                 </Text>
                 <Text style={{ paddingTop: 5, color: lightGreyColor, fontFamily: "lato-regular" }}>
-                    2321 votes
+                {"as "+cast.original_name}
                 </Text>
             </View>
         </View>
       
-        </>
+   
        
         
     )

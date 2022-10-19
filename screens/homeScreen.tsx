@@ -36,6 +36,8 @@ export function HomePage() {
         settrendingMovies(() => status.movieData.trendingMoviesList)
 
         setpopularMovies(()=> status.movieData.PopularMoviesList)
+
+        console.log(trendingMovies);
     }, [status.status])
 
 
@@ -47,7 +49,7 @@ export function HomePage() {
         <View style={style.parent}>
 
             <ImageBackground style={style.image} resizeMode="stretch" source={require("../assets/images/group3.png")}>
-                <View style={{ flex: 0.21 }}>
+                <View style={{ flex: 0.22 }}>
                     {/* Profile */}
                     <ProfileHeader userName={"shady"} />
                     {/* movies categories button Group */}
@@ -62,7 +64,7 @@ export function HomePage() {
 
                 </View>
                <View style={{ flex: 0.7}}>
-                    <ScrollView centerContent={true}>
+                    <ScrollView key={Math.random()} centerContent={true}>
 
                         {trendingMovies.length === 0 ? <View></View> : <ListOfMovies key={Math.random()} listOfMovies={trendingMovies} />}
 
