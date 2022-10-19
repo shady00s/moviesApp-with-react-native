@@ -7,7 +7,7 @@ import { Icon } from "@rneui/base";
 import { TitleComponent } from "../components/titleComponent";
 import YoutubeIframe from "react-native-youtube-iframe";
 import { useState } from 'react';
-import { MoviesListComponent } from "../components/moviesListComponent";
+import  MoviesListComponent  from "../components/moviesListComponent";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, useTypedSelector} from "../redux/store";

@@ -1,8 +1,8 @@
-import React, { FC } from "react";
+import React, { FC, memo } from "react";
 import {Icon} from '@rneui/themed';
 import { StyleSheet, View,Text, TouchableOpacity } from "react-native";
 
-export const ProfileHeader:FC<{userName:String}>  = ({userName})=>{
+const ProfileHeader:FC<{userName:String}>  = ({userName})=>{
     return (
        
         <>
@@ -26,7 +26,7 @@ export const ProfileHeader:FC<{userName:String}>  = ({userName})=>{
         </>
         
     );
-}
+} 
 
 const style = StyleSheet.create({
     mainContainer:{
@@ -66,3 +66,5 @@ const style = StyleSheet.create({
     }
 
 })
+
+export default memo(ProfileHeader)

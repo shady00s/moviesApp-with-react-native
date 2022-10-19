@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ImageBackground, Text, View, StyleSheet, FlatList, ScrollView, Dimensions } from "react-native";
-import { ProfileHeader } from "../components/profileHeader";
+import  ProfileHeader  from "../components/profileHeader";
 import { CategoriesContainer } from "../components/categoriesContainer";
-import { ListOfMovies } from "../components/newMoviesSlider";
+import  ListOfMovies  from "../components/newMoviesSlider";
 import { TitleComponent } from "../components/titleComponent";
 import { MoviesCategoriesListComponent } from "../components/moviesCategoriesComponent";
-import { MoviesListComponent } from "../components/moviesListComponent";
+import  MoviesListComponent  from "../components/moviesListComponent";
 import { useTypedSelector } from "../redux/store";
 import { homePageStatus } from '../redux/slices/homePageSlice';
 import { MovieModel } from './../models/movieModel';
@@ -14,7 +14,6 @@ import { homePageThunk } from '../redux/thunk/homePageThunk';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/store';
 
-const { width, height } = Dimensions.get("screen")
 export function HomePage() {
 
     const dispatch = useDispatch<AppDispatch>()
@@ -28,14 +27,15 @@ export function HomePage() {
     }, [])
 
 
-    const [topRatedMoviesList, setTopRatedMoviesList] = useState<MovieModel[]>([])
+    const [trendingMovies, settrendingMovies] = useState<MovieModel[]>([])
+    const [popularMovies, setpopularMovies] = useState<MovieModel[]>([])
 
 
     useEffect(() => {
 
-        setTopRatedMoviesList(() => status.movieData.PopularMoviesList)
+        settrendingMovies(() => status.movieData.trendingMoviesList)
 
-
+        setpopularMovies(()=> status.movieData.PopularMoviesList)
     }, [status.status])
 
 
@@ -47,7 +47,7 @@ export function HomePage() {
         <View style={style.parent}>
 
             <ImageBackground style={style.image} resizeMode="stretch" source={require("../assets/images/group3.png")}>
-                <View style={{ flex: 0.3 }}>
+                <View style={{ flex: 0.21 }}>
                     {/* Profile */}
                     <ProfileHeader userName={"shady"} />
                     {/* movies categories button Group */}
@@ -61,16 +61,16 @@ export function HomePage() {
 
 
                 </View>
-                <View style={{ flex: 0.7}}>
+               <View style={{ flex: 0.7}}>
                     <ScrollView centerContent={true}>
 
-                        {topRatedMoviesList.length === 0 ? <View></View> : <ListOfMovies key={Math.random()} listOfMovies={topRatedMoviesList} />}
+                        {trendingMovies.length === 0 ? <View></View> : <ListOfMovies key={Math.random()} listOfMovies={trendingMovies} />}
 
                         <TitleComponent title={"Categories"} allButton={false} />
                         <MoviesCategoriesListComponent catList={status.movieData.MoviesCategory} />
                         <TitleComponent title={"Recommended for you"} allButton={true} />
                        
-                            < MoviesListComponent moviesList={topRatedMoviesList} />
+                            < MoviesListComponent moviesList={popularMovies} />
                         
                         
                         

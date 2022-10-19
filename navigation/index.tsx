@@ -9,6 +9,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { HomePageNavigation } from './mainScreenNavigation';
 import { MovieDetailsScreen } from './../screens/movieDetailsScreen';
+import { IntroSelectionMovieScreen } from '../screens/introSelectMovieScreen';
 
 
 
@@ -34,6 +35,7 @@ const Stack = createNativeStackNavigator();
 function RootNavigator() {
   return (
     <Stack.Navigator>
+      <Stack.Screen name="introChooseMovies" component={IntroSelectionMovieScreen} options={{ headerShown: false }}/>
       <Stack.Screen name="mainPage" component={HomePageNavigation} options={{ headerShown: false }} />
       <Stack.Screen name="movieScreen" component={MovieDetailsScreen} options={{ headerShown: false }} />
       

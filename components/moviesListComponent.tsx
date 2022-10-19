@@ -1,4 +1,4 @@
-import React, { FC }  from 'react';
+import React, { FC, memo }  from 'react';
 
 import {View,Text,FlatList,StyleSheet,Dimensions,ImageBackground,TouchableOpacity} from 'react-native';
 
@@ -8,7 +8,7 @@ import { darkGreyColor, lightGreyColor } from './../constants/Colors';
 import { MovieModel } from './../models/movieModel';
 import { useNavigation } from '@react-navigation/native';
 const test = ["sda","dsa,","DSADASD","sda","dsa,","DSADASD","sda","dsa,","DSADASD"]
-export const MoviesListComponent:FC<{moviesList:MovieModel[]}> = ({moviesList})=>{
+ const MoviesListComponent:FC<{moviesList:MovieModel[]}> = ({moviesList})=>{
     return(
         <View  style={{height:420}}>
             <FlatList
@@ -76,3 +76,5 @@ const style = StyleSheet.create({
        
     }
 })
+
+export default MoviesListComponent

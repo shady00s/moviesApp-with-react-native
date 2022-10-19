@@ -1,4 +1,4 @@
-import { FC, useState } from "react"
+import { FC, memo, useState } from "react"
 import { View, Image, Text, StyleSheet, TouchableOpacity, FlatList,Animated } from "react-native"
 import { lightGreyColor, separatorColor, whiteColor } from "../constants/Colors"
 import { Icon, } from '@rneui/themed';
@@ -9,6 +9,8 @@ import { ShareComponent } from "./shareComponent";
 const optionslist:optionObj[] = [{title:"Add to Favorite",iconName:"heart",onPress:()=>{}},{title:"Share with friends",iconName:"share-alt",onPress:()=>{
     ShareComponent()
 }},] 
+
+
 export const SmallMovieComponent: FC<{ title: string }> = ({ title }) => {
     return (<View style={style.mainContainer}>
         <View style={{ width: "25%" }}>
@@ -27,7 +29,7 @@ export const SmallMovieComponent: FC<{ title: string }> = ({ title }) => {
     </View>)
 }
 
-export const OptionsComponent: FC<{optionsData:optionObj[]}> = ({optionsData}) => {
+const OptionsComponent: FC<{optionsData:optionObj[]}> = ({optionsData}) => {
 const [isOpend,setIsOpend]= useState<boolean>(false)
     
 
@@ -96,3 +98,5 @@ const style = StyleSheet.create({
         
     }
 })
+
+export default memo(OptionsComponent)

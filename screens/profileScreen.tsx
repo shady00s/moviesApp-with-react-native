@@ -1,13 +1,12 @@
 import React, { useRef } from "react";
 import { useState } from "react";
-import { Text, View, StyleSheet, Dimensions, ScrollView, NativeScrollEvent, NativeSyntheticEvent } from "react-native";
+import { Text, View, StyleSheet, Dimensions } from "react-native";
 import { AppBar } from "../components/appBarComponent";
-import { DataComponent, PersonalDataComponent } from "../components/profileComponents/personalDataComponent";
+import {  PersonalDataComponent } from "../components/profileComponents/personalDataComponent";
 import { PurchasesDataComponent } from "../components/profileComponents/purchasesComponent";
 import { SettingsDataComponent } from "../components/profileComponents/settingsComponent";
-import { SliderComponent } from "../components/sliderComponent";
+import  SliderComponent  from "../components/sliderComponent";
 import { blackColor, whiteColor } from "../constants/Colors";
-import { CategoriesContainer } from './../components/categoriesContainer';
 
 
 let index: number = 0;

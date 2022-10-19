@@ -1,9 +1,9 @@
-import { FC, useEffect,  useRef, useState } from "react";
+import { FC, memo, useEffect,  useRef, useState } from "react";
 import { View,Text, TouchableOpacity, FlatList ,ScrollView, Dimensions} from "react-native";
 import { whiteColor } from "../constants/Colors";
 import { pinkColor } from './../constants/Colors';
 
-export const SliderComponent:FC<{titleList:string[],widgetsList:any[]}>=({titleList,widgetsList})=>{
+ const SliderComponent:FC<{titleList:string[],widgetsList:any[]}>=({titleList,widgetsList})=>{
     const [initIndex,setIndex]= useState<number>(0)
     const [scrollIndex,setScrollIndex] = useState<number>(0)
 
@@ -63,3 +63,6 @@ export const SliderComponent:FC<{titleList:string[],widgetsList:any[]}>=({titleL
         
     )
 }
+
+
+export default memo(SliderComponent)

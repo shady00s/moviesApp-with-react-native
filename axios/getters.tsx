@@ -15,3 +15,10 @@ import { axiosInstance } from './inestance';
     let data = await axiosInstance.get("/movieDetails",{params:{movieID:movieId}})
     return data
  }
+
+
+ export const getIntroListMovies = async()=>{
+   let data = await axiosInstance.get("/selectMoviesCategories")
+
+   return data
+ }

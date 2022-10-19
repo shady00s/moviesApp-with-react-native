@@ -1,8 +1,6 @@
-import { View, Text, StyleSheet, Dimensions, FlatList } from "react-native";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { AppBar } from "../components/appBarComponent";
-
-import { CategoriesContainer } from "../components/categoriesContainer";
-import { SliderComponent } from "../components/sliderComponent";
+import  SliderComponent  from "../components/sliderComponent";
 import { blackColor, whiteColor } from "../constants/Colors";
 import { SmallMovieComponent } from './../components/smallMovieComponent';
 

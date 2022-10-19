@@ -6,12 +6,14 @@ import { homePageThunk } from '../thunk/homePageThunk';
 
 type initialStateType = {
   movieData: {
+    trendingMoviesList:MovieModel[],
     PopularMoviesList: MovieModel[],
     RecommendedMoviesList: MovieModel[],
     MoviesCategory: MoviesCategory[],
     TopRatedMoviesList: MovieModel[],
   }
   , tvShowsData: {
+     trendingTVLists:TvSHowModel[],
       popularTvList: TvSHowModel[],
         recommendedTvList:TvSHowModel[],
         topRatedTvList:TvSHowModel[],
@@ -29,6 +31,7 @@ type initialStateType = {
 
 const initialState: initialStateType = {
   movieData: {
+    trendingMoviesList:[],
     PopularMoviesList: [],
     RecommendedMoviesList: [],
     MoviesCategory: [],
@@ -36,6 +39,7 @@ const initialState: initialStateType = {
 
   }
   , tvShowsData: {
+    trendingTVLists:[],
       popularTvList: [],
       recommendedTvList:[],
       topRatedTvList:[],

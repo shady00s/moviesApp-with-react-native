@@ -1,12 +1,14 @@
 import {configureStore} from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import { homePageReducer } from './slices/homePageSlice';
+import { introMoviesReducer } from './slices/introMovieSlice';
 import { movieDetailsReducer } from './slices/movieDetailsSlice';
 
 export const store = configureStore({
     reducer: {
        homePageReducer:homePageReducer,
-       movieDetailsReducer:movieDetailsReducer
+       movieDetailsReducer:movieDetailsReducer,
+       introMoviesReducer:introMoviesReducer
     }
 })
 

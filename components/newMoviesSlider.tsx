@@ -1,74 +1,54 @@
-import React, { useRef ,useEffect,useState, useMemo, FC} from "react";
-import { Image, TouchableOpacity, View,Text,StyleSheet,Dimensions,Animated, NativeSyntheticEvent, NativeScrollEvent, Pressable } from "react-native";
+import React, { useRef ,useEffect,useState, FC, useMemo, memo, } from "react";
+import { Image, TouchableOpacity, View,Text,StyleSheet,Dimensions,Animated, NativeSyntheticEvent, NativeScrollEvent, Pressable, VirtualizedListWithoutRenderItemProps, FlatListProps } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { blackColor, darkGreyColor, pinkColor, whiteColor } from "../constants/Colors";
+import { blackColor, pinkColor, whiteColor } from "../constants/Colors";
 import { lightGreyColor } from './../constants/Colors';
 import { useNavigation } from '@react-navigation/native';
 import { MovieModel } from './../models/movieModel';
 import { imageURL } from "../constats";
 
 
-export const ListOfMovies:FC<{listOfMovies:MovieModel[]}> = ({listOfMovies})=>{
-    let int:number = 0;
+  const ListOfMovies:FC<{listOfMovies:MovieModel[]}> = ({listOfMovies})=>{
     const [initialNumber,setInitialNumber]= useState<number>(0);
-    const [scrollIndex,setScrollIndex] = useState<number>(0)
-    const [timerVal,setTimerVal]=useState<number>(4000)
-    const listRef = useRef<FlatList>(null);
-
-
-    let timer:NodeJS.Timeout |number | undefined;
-
-
-
-    useEffect(()=>{
-     timer  = setInterval(()=>{
-        int++
-        if(int > listOfMovies!.length){
-            int = 0
-        }else{
-            setInitialNumber(int)
-            listRef.current?.scrollToIndex({animated:true,index:int-1})
-
-            
-        }
-        
-    },timerVal);
-       return ()=>clearTimeout(timer)
-    },[timerVal])
-
-    useEffect(()=>{
-        setInitialNumber(scrollIndex)
-    },[scrollIndex])
-
+    const listRef = useRef<FlatList>(null);    
 
     return(<View style={{justifyContent:"center",alignItems:"center"}}>
         <FlatList
         ref={listRef}
+        contentContainerStyle={{ flexGrow: 1}}
         keyExtractor={(item)=>item.backdrop_path}
         pagingEnabled
+        snapToAlignment={"center"}
             horizontal
             scrollEnabled
             data={listOfMovies}
             centerContent={true}
-            onScroll={(event:NativeSyntheticEvent<NativeScrollEvent>)=>
-               
-                {
-                    setTimerVal(5500)
-                    // to stop the automatic scrolling
-                   let x = Math.round((event.nativeEvent.contentOffset.x / Dimensions.get("screen").width))          
-                    setScrollIndex(x)
+            onScrollToIndexFailed={(element )=>{
+                    setInitialNumber(element.index)
+            }}
+            
+            disableIntervalMomentum={true}
+            
+            onMomentumScrollEnd={(event:NativeSyntheticEvent<NativeScrollEvent>)=>{
+            
+            let scrollIndex = Math.floor(event.nativeEvent.contentOffset.x / Dimensions.get("screen").width)
+
+                setInitialNumber(scrollIndex+1)              
                 
-                }}
+        }}
+
+            
+           
             renderItem={({item,index}:{item:MovieModel,index:number},)=><MoviesContainer key={item.backdrop_path} name={item.title} discription={item.overview} imageLink={item.backdrop_path} id={item.id}/>}
 
         /> 
     
         <View style={style.indecatorContainer}>
                 {listOfMovies.map((e,index)=><TouchableOpacity onPress={()=>{
+                       
+                       setInitialNumber(index)
+                       listRef.current?.scrollToIndex({animated:true,index:index})
                     
-                    setTimerVal(5500)
-                    setInitialNumber(index)
-                    listRef.current?.scrollToIndex({animated:true,index:index})
                     
                     
                     }}><Animated.View key={e.id} style={initialNumber === index? style.activeBallIndecator :style.ballIndicator}></Animated.View></TouchableOpacity>)}
@@ -81,7 +61,7 @@ export const ListOfMovies:FC<{listOfMovies:MovieModel[]}> = ({listOfMovies})=>{
 const  MoviesContainer:FC<{name:string,discription:string,imageLink:string,id:number}>=({name,imageLink,id,discription})=>{
     const navigator = useNavigation<any>()
         return(
-        <TouchableOpacity onPress={()=>{navigator.navigate('movieScreen',{movieID:id})}}>
+        <TouchableOpacity style={{width:Dimensions.get("screen").width,justifyContent:"center",alignItems:"center"}}onPress={()=>{navigator.navigate('movieScreen',{movieID:id})}}>
                 <View style={style.mainContainer}>
                 <Image  style={{width:"100%",height:"70%",borderRadius:15}} resizeMode="cover" 
                 
@@ -163,3 +143,5 @@ const style = StyleSheet.create({
 
 
 })
+
+export default memo(ListOfMovies)
