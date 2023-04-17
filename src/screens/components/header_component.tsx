@@ -8,7 +8,7 @@ export default function HeaderComponent() {
       <View style={style.container}>
         {/* drawer menu */}
         <View style={style.drawerIcon}></View>
-        <Text>MovieOnline</Text>
+        <Text style={style.text}>MovieOnline</Text>
         <View style={style.drawerIcon}></View>
 
       </View>
@@ -17,19 +17,23 @@ export default function HeaderComponent() {
 }
 
 const style = StyleSheet.create({
+  text:{
+    color:whiteColor
+  },
     container:{
         marginTop:37,
         display:"flex",
         flexDirection:"row",
-        justifyContent:"space-evenly",
-        alignItems:"center"
+        justifyContent:"space-between",
+        alignItems:"center",
+        padding:20
     },
   drawerIcon: {
-    width: 25,
-    height:25,
+    width: 20,
+    height:20,
     borderRadius: 9999,
     borderColor: whiteColor,
-    padding: 30,
+    padding: 20,
     borderWidth: 0.3,
   },
 });
