@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { userFirstTime } from '../constants';
 import { useNavigation } from "@react-navigation/native";
 import IntroScreen from "../screens/intro_screen/screen";
+import LoginScreen from "../screens/login_screen/screen";
 
 const Stack = createStackNavigator()
 
@@ -51,6 +52,8 @@ export default function StackNavigation (){
    }}>  
         {/* <Stack.Screen options={{headerShown:false}}  name="home" component={MainScreen}/>
         <Stack.Screen options={{headerTitle: 'Search'}}  name="search" component={SearchScreen}/> */}
-        <Stack.Screen options={{headerShown:false}} name="intro-screen" component={IntroScreen}/>
+        {/* <Stack.Screen options={{headerShown:false}} name="intro-screen" component={IntroScreen}/> */}
+        <Stack.Screen options={{headerShown:false}} name="login" component={LoginScreen}/>
+    
     </Stack.Navigator>)
 }

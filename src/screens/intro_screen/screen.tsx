@@ -1,7 +1,9 @@
 import React from "react"
 import {View,StyleSheet,Text,Image, Button, TouchableOpacity} from "react-native"
 import { backgroundColor, whiteColor, yellowColor } from "../../constants"
+import { useNavigation } from "@react-navigation/native"
 export default function IntroScreen(){
+    const navigation = useNavigation<any>()
     return(<>
     <View style={style.mainContainer}>
         <View style={style.container}>
@@ -9,7 +11,9 @@ export default function IntroScreen(){
             <Text style={style.text}>Your favorite movies are here.</Text>
         </View>
         <View style={style.containersButton}>
-            <TouchableOpacity style={style.login}>
+            <TouchableOpacity onPress={()=>{
+                navigation.navigate("login")
+            }} style={style.login}>
                 <Text style={style.buttonText}>Login</Text>
             </TouchableOpacity>
            <View style={style.registerContainer}>
@@ -33,10 +37,12 @@ const style = StyleSheet.create({
         backgroundColor:backgroundColor
     },
     text:{
+        fontFamily:"medium",
         padding:30,
         color:whiteColor
     },
     buttonText:{
+        fontFamily:"bold",
         fontWeight:"800",
         fontSize:19
     },
@@ -73,9 +79,12 @@ const style = StyleSheet.create({
         justifyContent:"space-between"
     },
     regText:{
-        color:whiteColor
+        paddingRight:8,
+        color:whiteColor,
+        fontFamily:"medium"
     }
     ,regButton:{
+        fontFamily:"bold",
         color:yellowColor
     }
 
