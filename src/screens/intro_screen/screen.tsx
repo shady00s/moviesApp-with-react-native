@@ -18,7 +18,10 @@ export default function IntroScreen(){
             </TouchableOpacity>
            <View style={style.registerContainer}>
             <Text style={style.regText}>Don't have account?</Text>
-            <TouchableOpacity >
+            <TouchableOpacity onPress={()=>{
+                                  navigation.navigate("register")
+
+            }}>
                 <Text style={style.regButton} >Register</Text>
 
             </TouchableOpacity>

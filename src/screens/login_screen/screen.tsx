@@ -3,12 +3,14 @@ import { backgroundColor, lightGrayColor, whiteColor, yellowColor } from "../../
 import { TextInput } from "react-native-gesture-handler";
 import { useState } from "react";
 import Ionicons from '@expo/vector-icons/Ionicons'
+import { useNavigation } from "@react-navigation/native";
 interface foucs {
   isFirstInputFoucsed: boolean;
   isSecondInputFoucsed: boolean;
 }
 
 export default function LoginScreen() {
+  const navigator = useNavigation<any>()
   const [focused, setFoucsed] = useState<foucs>({
     isFirstInputFoucsed: false,
     isSecondInputFoucsed: false,
@@ -78,7 +80,9 @@ export default function LoginScreen() {
               {/* register option */}
               <View style={style.regContainer}>
                 <Text style={style.textStyle}>Don't have account? </Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={()=>{
+                  navigator.navigate("register")
+                }}>
                   <Text style={style.regText}>Register</Text>
                 </TouchableOpacity>
               </View>
