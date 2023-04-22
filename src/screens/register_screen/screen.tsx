@@ -2,7 +2,8 @@ import React from "react";
 import { View,StyleSheet, Text, SafeAreaView } from "react-native";
 import { backgroundColor, whiteColor } from '../../constants';
 import Stepper from "../components/stepper_component";
-
+import user_information_component from "./components/user_information_component";
+import set_favorite_movies from "./components/set_favorite_movies";
 export default function RegisterScreen(){
 
     return(
@@ -11,8 +12,8 @@ export default function RegisterScreen(){
                 
                     <Text style={style.text}>Create new account</Text>
                     <Stepper screens={[
-                    Test1,Test2,Test3,Test4,Test5,Test6
-                    ]} titleList={[]} indexColor={""}/>
+                    {title:"User Information",screen:user_information_component},{title:"What movies you Prefer",screen:set_favorite_movies}
+                    ]}  indexColor={""}/>
                 
             </View>
 
@@ -20,36 +21,7 @@ export default function RegisterScreen(){
     )
 }
 
-const Test1: React.FC<any> =(props)=>{
-    return(<>
-        <View style={{flex:1,backgroundColor:backgroundColor,justifyContent:"center",alignItems:'center'}}><Text style={{color:whiteColor}}>x1</Text></View>
-    </>)
-}
-const Test2: React.FC<any> =(props)=>{
-    return(<>
-        <View style={{flex:1,backgroundColor:backgroundColor,justifyContent:"center",alignItems:'center'}}><Text style={{color:whiteColor}}>x1</Text></View>
-    </>)
-}
-const Test3: React.FC<any> =(props)=>{
-    return(<>
-        <View style={{flex:1,backgroundColor:backgroundColor,justifyContent:"center",alignItems:'center'}}><Text style={{color:whiteColor}}>x1</Text></View>
-    </>)
-}
-const Test4: React.FC<any> =(props)=>{
-    return(<>
-        <View style={{flex:1,backgroundColor:backgroundColor,justifyContent:"center",alignItems:'center'}}><Text style={{color:whiteColor}}>x1</Text></View>
-    </>)
-}
-const Test5: React.FC<any> =(props)=>{
-    return(<>
-        <View style={{flex:1,backgroundColor:backgroundColor,justifyContent:"center",alignItems:'center'}}><Text style={{color:whiteColor}}>x1</Text></View>
-    </>)
-}
-const Test6: React.FC<any> =(props)=>{
-    return(<>
-        <View style={{flex:1,backgroundColor:backgroundColor,justifyContent:"center",alignItems:'center'}}><Text style={{color:whiteColor}}>x1</Text></View>
-    </>)
-}
+
 
 const style = StyleSheet.create({
     container:{

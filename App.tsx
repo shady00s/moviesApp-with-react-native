@@ -3,6 +3,7 @@ import StackNavigation from "./src/navigation/stack_navigation";
 import { useFonts } from "expo-font";
 import { View, Image } from "react-native";
 import { backgroundColor } from "./src/constants";
+import { StatusBar } from "expo-status-bar";
 
 export default function App() {
   const [loaded] = useFonts({
@@ -13,6 +14,8 @@ export default function App() {
   if (!loaded) {
     return (
       <>
+      <StatusBar backgroundColor={backgroundColor} style={'light'}/>
+
         <View
           style={{
             flex: 1,
@@ -30,11 +33,13 @@ export default function App() {
             source={require("./assets/logo.png")}
           />
         </View>
+      
       </>
     );
   }
   return (
     <>
+     <StatusBar backgroundColor={backgroundColor} style={'light'}/>
       <NavigationContainer>
         <StackNavigation />
       </NavigationContainer>

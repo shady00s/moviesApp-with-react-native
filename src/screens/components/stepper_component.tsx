@@ -1,31 +1,33 @@
 import { StyleSheet, View, Text } from "react-native";
-import React, { useRef, useState } from "react";
-import { backgroundColor, subBackGround, yellowColor } from '../../constants';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { backgroundColor, subBackGround, whiteColor, yellowColor } from '../../constants';
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { Dimensions } from "react-native";
+
+interface screenInterface{
+  title:string,
+  screen: React.FC,
+}
+
 interface stepperModel {
-  screens: React.FC[];
-  titleList: string[];
+  screens: screenInterface[];
   indexColor: string;
 }
 
 interface separator {
   number: number;
-  color:string
+  color: string
 }
 // separator line
 const Separator: React.FC<separator> = (props) => {
-  const width =  useRef(Dimensions.get("screen").width) ;
 
-  // separator width is caluclated by taking the width - (number of screens * double width of the index circle ) - 20
-  const separatorWidth = Math.round(width.current - (props.number * 52)-20)
   return (
     // main separator container
     <View
       style={{
         height: "auto",
-        width: separatorWidth,
-        padding:3,
+        width: "100%",
+      
         justifyContent: "center",
         alignItems: "center",
       }}
@@ -43,36 +45,78 @@ const Separator: React.FC<separator> = (props) => {
   );
 };
 const Stepper: React.FC<stepperModel> = (props) => {
+  const width = useRef(Dimensions.get("window").width);
+  const listRef = useRef(null)
+  const [selectedIndex, setSelectedIndex] = useState<number>(0)
 
-  const startElement = 0
-  const [selectedIndex,setSelectedIndex] = useState<number>(startElement)
+  const currentIndex = useCallback(
+    ({ viewableItems, changed })  => {
+      if (viewableItems.length > 0) {
+        const index = viewableItems[0].index;
+        setSelectedIndex(()=>index);
+      }
+    },
+    [],
+  )
+
+  const changeIndexByCircle = useCallback((index:number)=>{
+    listRef.current.scrollToIndex({
+      index:index,
+      animated:true,
+      viewOffset:0,
+      viewPosition:0
+    })
+    setSelectedIndex(()=>index)
+
+    
+
+  },[])
+    
+
   return (
     <>
       <View style={style.mainContianer}>
         {/* indexContainer */}
         <View style={style.indexContainer}>
           {/* index design */}
-          <FlatList
-            horizontal
-            data={props.screens}
-            renderItem={({ item, index }) => (
-              <TouchableOpacity key={index} onPress={()=>{
-                setSelectedIndex(index)
-              }} style={style.indexButton}>
-                <View style={[{...style.circleBody},{backgroundColor:selectedIndex === index?yellowColor:subBackGround}]}>
-                  <Text style={[{...style.circleIndex},{color:selectedIndex === index?backgroundColor:yellowColor}]}>{index + 1}</Text>
-                </View>
-              </TouchableOpacity>
-            )}
-            contentContainerStyle={{
-              flex:1,
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-            ItemSeparatorComponent={({heighlited}) => 
-              <Separator  color={heighlited?yellowColor:subBackGround} number={props.screens.length} />
-            }
-          />
+          {props.screens.map((screenData, index) =>
+          <View key={index} style={{flexDirection:"row",justifyContent:"center",alignItems:"stretch",}}>
+
+            <TouchableOpacity key={index} onPress={() => 
+              changeIndexByCircle(index)
+
+            } style={{...style.indexButton}}>
+              <View style={[{ ...style.circleBody }, { backgroundColor: selectedIndex === index ? yellowColor : subBackGround }]}>
+                <Text style={[{ ...style.circleIndex }, { color: selectedIndex === index ? backgroundColor : yellowColor }]}>{index + 1}</Text>
+              </View>
+              { index !== props.screens.length -1? <View style={{width:Math.round((width.current / props.screens.length) - 30)}}>
+            <Separator number={0} color={selectedIndex === index ?yellowColor:subBackGround}/>
+                
+              </View>:null}
+            </TouchableOpacity>
+            </View>
+          )}
+     
+        </View>
+
+        {/* screen body */}
+        <View style={{width:"100%" ,height:"100%"}}>
+            <FlatList
+            ref={listRef}
+            
+              scrollEnabled={false}
+              initialScrollIndex={0}
+              data={props.screens}
+              showsHorizontalScrollIndicator={false}
+              horizontal={true}
+              pagingEnabled={true}
+              keyExtractor={(data=>data.title)}
+              getItemLayout={(data, index)=>({length:width.current,offset:width.current * index ,index})}
+              renderItem={(data)=><View style={{width:width.current,
+                 }}><Text style={style.text}>{data.item.title}</Text>
+                  <data.item.screen/>
+                 </View>}
+            />
         </View>
       </View>
     </>
@@ -81,16 +125,17 @@ const Stepper: React.FC<stepperModel> = (props) => {
 
 const style = StyleSheet.create({
   mainContianer: {
-    width: "100%",
+    width: "95%",
     backgroundColor: backgroundColor,
-    padding: 20,
+    margin:8,
+    padding:3
   },
   indexContainer: {
     overflow: "hidden",
     width: "100%",
     padding: 12,
     flexDirection: "row",
-    alignItems: "center",
+    alignItems:"stretch",
     justifyContent: "space-between",
   },
   wrapper: {
@@ -99,20 +144,24 @@ const style = StyleSheet.create({
     padding: 16,
   },
   indexButton: {
-    width: 26,
-    height: 26,
+    justifyContent:"center",
+    flexDirection:"row",
+    alignItems:"center",
   },
   circleBody: {
     justifyContent: "center",
     alignItems: "center",
-
-    width:"100%",
-    height:"100%",
+    width: 26,
+    height: 26,
     borderRadius: 9999,
   },
   circleIndex: {
     color: yellowColor,
   },
+  text:{
+    color:whiteColor,
+    fontFamily:"bold"
+  }
 });
 
-export default Stepper;
+export default React.memo(Stepper);
