@@ -1,86 +1,34 @@
-import { View, Text, StyleSheet, Modal, TextInput, Image, TouchableOpacity, TouchableWithoutFeedback } from "react-native"
+import { View, Text, StyleSheet, Modal, TextInput, Image, TouchableOpacity, TouchableWithoutFeedback, ScrollView, Dimensions } from "react-native"
 import React, { useState } from "react"
 import { backgroundColor, subBackGround, whiteColor, yellowColor } from "../../../constants"
 import InputTextComponent from "../../components/input_text_component"
 import { useNavigation } from "@react-navigation/native"
-import * as ImagePicker from 'expo-image-picker';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { SelectImageComponent } from "./select_image_component"
+const height = Dimensions.get("screen").height
 const UserIformationComponent: React.FC = () => {
     const navigation = useNavigation<any>()
-    const [image, setImage] = useState(null)
-    const [openModel, setOpenModal] = useState(false)
-    async function chooseImage() {
-        let res = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-
-        });
-        if (!res.canceled) {
-            setImage(res.assets[0].uri)
-        }
-    }
-
-    async function takeNewImage() {
-        let res = await ImagePicker.launchCameraAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        })
-        if (!res.canceled) {
-            setImage(res.assets[0].uri)
-        }
-    }
-    return (<>
+    
+    return (
+        <View style={{flex:1}}>
+            <ScrollView>
         <View style={style.container}>
+
+            
             <View style={style.inputContainer}>
-                {/* image picker */}
-                <View style={style.imagePicker}>
-                    {!image ? <Ionicons size={45} style={style.emptyImage} name="image-outline" /> : <Image style={style.profileImage} source={{ uri: image }} />
-                    }
-                      <TouchableOpacity onPress={()=>{setOpenModal(true)}}>
-                                <Text style={style.regText}>{!image?"Add photo":"Change photo"}</Text>
-                            </TouchableOpacity>
-                    <Modal
-                    visible={openModel}
-                    onDismiss={()=>{
-                        setOpenModal(false)
-                    }}
-                    onPointerCancel={()=>{
-                        setOpenModal(false)
-                    }} transparent={true} animationType="slide" style={style.modal}>
-                       <View style={{flex:1}}>
-                        <TouchableWithoutFeedback onPress={()=>{
-                             setOpenModal(false)
-                        }}>
-                        <View style={{flex:1}}>
-
-                        </View>
-
-                        </TouchableWithoutFeedback>
-                        <View style={style.modalOptions}>
-                            <TouchableOpacity onPress={chooseImage}>
-                                <Text style={style.imageButton}>Choose image</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity onPress={takeNewImage}>
-                                <Text  style={style.imageButton}>Take a selfie</Text>
-                            </TouchableOpacity>
-
-                        </View>
-
-                       </View>
-                            
-                      
-                    </Modal>
+                {/* intro text */}
+                <View>
+                    <Text style={style.introText}>Complete your profile</Text>
+                    <Text style={style.introSubtext}>Add image for you, your name and set password for your profile.</Text>
                 </View>
+                {/* image picker */}
+                    <SelectImageComponent/>
+                <View style={{height:"60%",justifyContent:"space-evenly"}}>
 
                 <InputTextComponent placeholder="Name" />
                 <InputTextComponent placeholder="Email" />
                 <InputTextComponent placeholder="Password" />
                 <InputTextComponent placeholder="Confirm password" />
+                </View>
 
 
             </View>
@@ -104,7 +52,11 @@ const UserIformationComponent: React.FC = () => {
                 <Text>Next</Text>
             </TouchableOpacity>
         </View>
-    </>)
+            </ScrollView>
+
+        </View>
+
+    )
 }
 
 export default React.memo(UserIformationComponent)
@@ -112,14 +64,14 @@ export default React.memo(UserIformationComponent)
 const style = StyleSheet.create({
     container: {
         flex: 1,
-
-
+       
     },
     inputContainer: {
+        marginTop:"12%",
         width: "95%",
-        marginTop: "20%",
-
-        justifyContent: "space-evenly"
+        height: height * 0.6,
+        padding:10,
+        justifyContent: "space-between",
     },
     text: {
         fontFamily: 'bold',
@@ -130,6 +82,7 @@ const style = StyleSheet.create({
         paddingTop: 9,
         flexDirection: "row",
         width: "55%",
+        height:height * 0.1,
         justifyContent: "space-between"
     },
     regText: {
@@ -141,40 +94,15 @@ const style = StyleSheet.create({
         fontFamily: "bold",
         color: yellowColor
     },
-    profileImage: {
-        width: 60,
-        height: 60,
-        borderRadius: 9999
-    },
-    imagePicker: {
-        height: "30%",
-        flexDirection: "row",
-        alignItems: "center",
-
-    },
-    emptyImage: {
-        width: 70,
-        height: 70,
-        color: subBackGround
-    },
-    modal: {
-        height: 40
-    },
-    modalOptions:{
-        position:"absolute",
-        width:'100%',
-        flexDirection:"column",
-        justifyContent:"center",
-        alignItems:"center",
-        height:"20%",
-        bottom:0,
-        backgroundColor:whiteColor,
-        borderTopLeftRadius:30,
-        borderTopRightRadius:30,
-    },
-    imageButton:{
-        padding:10,
-        fontSize:16,
+   
+    introText:{
+        color:whiteColor,
         fontFamily:"bold",
+        fontSize:19
+    },
+    introSubtext:{
+        fontFamily:'normal',
+        color:"rgba(162,162,162,0.6)",
+        padding:12
     }
 })

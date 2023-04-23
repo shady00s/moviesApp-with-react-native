@@ -19,7 +19,7 @@ const style = StyleSheet.create({
     mainContainer: { flexDirection: "row", alignItems: "center", width: "90%", padding: 10, borderRadius: 12, backgroundColor: subBackGround },
     textInput:{
         width:"100%",
-        color:whiteColor
+        color:whiteColor,
     }
 })
 
