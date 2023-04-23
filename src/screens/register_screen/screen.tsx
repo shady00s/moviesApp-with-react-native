@@ -12,8 +12,10 @@ export default function RegisterScreen(){
                 
                     <Text style={style.text}>Create new account</Text>
                     <Stepper screens={[
-                    {title:"User Information",screen:user_information_component},{title:"What movies you Prefer",screen:set_favorite_movies},
-                    {title:"Confirm user data",screen:set_favorite_movies}
+                    {title:"User Information",screen:user_information_component},
+                    {title:"What movies you Prefer",screen:set_favorite_movies},
+                    {title:"Confirm user data",screen:set_favorite_movies},
+                   
                     
                     ]}  indexColor={""}/>
                 

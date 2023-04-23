@@ -89,7 +89,7 @@ const Stepper: React.FC<stepperModel> = (props) => {
               <View style={[{ ...style.circleBody }, { backgroundColor: selectedIndex === index ? yellowColor : subBackGround }]}>
                 <Text style={[{ ...style.circleIndex }, { color: selectedIndex === index ? backgroundColor : yellowColor }]}>{index + 1}</Text>
               </View>
-              { index !== props.screens.length -1? <View style={{width:Math.round((width.current / props.screens.length) - 30)}}>
+              { index !== props.screens.length -1? <View style={{width:Math.round((width.current / props.screens.length) - ( props.screens.length *  props.screens.length))}}>
             <Separator number={0} color={selectedIndex === index ?yellowColor:subBackGround}/>
                 
               </View>:null}
