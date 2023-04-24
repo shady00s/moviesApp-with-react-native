@@ -4,10 +4,11 @@ import { backgroundColor, subBackGround, whiteColor, yellowColor } from "../../.
 import InputTextComponent from "../../components/input_text_component"
 import { useNavigation } from "@react-navigation/native"
 import { SelectImageComponent } from "./select_image_component"
+import PasswordCheckerComponent from "../../components/password_checker_component"
 const height = Dimensions.get("screen").height
 const UserIformationComponent: React.FC = () => {
     const navigation = useNavigation<any>()
-    
+    const [password,setPassword] = useState('')
     return (
         <View style={{flex:1}}>
             <ScrollView>
@@ -24,10 +25,11 @@ const UserIformationComponent: React.FC = () => {
                     <SelectImageComponent/>
                 <View style={{height:"60%",justifyContent:"space-evenly"}}>
 
-                <InputTextComponent placeholder="Name" />
-                <InputTextComponent placeholder="Email" />
-                <InputTextComponent placeholder="Password" />
-                <InputTextComponent placeholder="Confirm password" />
+                <InputTextComponent onChange={(data)=>{}} placeholder="Name" />
+                <InputTextComponent onChange={(data)=>{}} placeholder="Email" />
+                <InputTextComponent onChange={(data)=>{setPassword(data)}} placeholder="Password" />
+                <PasswordCheckerComponent password={password}/>
+                <InputTextComponent onChange={(data)=>{}} placeholder="Confirm password" />
                 </View>
 
 
