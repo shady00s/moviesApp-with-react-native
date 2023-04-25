@@ -82,7 +82,7 @@ const style = StyleSheet.create({
         borderRadius: 9999
     },
     imagePicker: {
-        flex:1,
+        flex:0.3,
         flexDirection: "row",
         alignItems: "center",
 

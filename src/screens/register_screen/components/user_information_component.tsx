@@ -10,7 +10,7 @@ const UserIformationComponent: React.FC = () => {
     const navigation = useNavigation<any>()
     const [password,setPassword] = useState('')
     return (
-        <View style={{flex:1}}>
+        <View style={{ justifyContent:"space-evenly"}}>
             <ScrollView>
         <View style={style.container}>
 
@@ -23,7 +23,7 @@ const UserIformationComponent: React.FC = () => {
                 </View>
                 {/* image picker */}
                     <SelectImageComponent/>
-                <View style={{height:"60%",justifyContent:"space-evenly"}}>
+                <View style={{height:"90%",justifyContent:"space-evenly"}}>
 
                 <InputTextComponent onChange={(data)=>{}} placeholder="Name" />
                 <InputTextComponent onChange={(data)=>{}} placeholder="Email" />
@@ -64,9 +64,7 @@ const UserIformationComponent: React.FC = () => {
 export default React.memo(UserIformationComponent)
 
 const style = StyleSheet.create({
-    container: {
-        flex: 1,
-       
+    container: {       
     },
     inputContainer: {
         marginTop:"12%",
@@ -84,7 +82,7 @@ const style = StyleSheet.create({
         paddingTop: 9,
         flexDirection: "row",
         width: "55%",
-        height:height * 0.1,
+        
         justifyContent: "space-between"
     },
     regText: {
