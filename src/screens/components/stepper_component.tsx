@@ -112,7 +112,7 @@ const Stepper: React.FC<stepperModel> = (props) => {
               pagingEnabled={true}
               keyExtractor={(data=>data.title)}
               getItemLayout={(data, index)=>({length:width.current,offset:width.current * index ,index})}
-              renderItem={(data)=><View style={{width:width.current,
+              renderItem={(data)=><View style={{flex:1,width:width.current,
                  }}><Text style={style.text}>{data.item.title}</Text>
                   <data.item.screen/>
                  </View>}
