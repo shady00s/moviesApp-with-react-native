@@ -1,204 +1,93 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
-import { View, StyleSheet, Text, Dimensions } from "react-native";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { View, StyleSheet, Text, Dimensions, Easing } from "react-native";
 import React from "react";
-import { subBackGround } from "../../constants";
-import { passwordHaveCapitalLetter,passwordHaveNumberValidator,passwordHaveSpecialCharacter,passwordLength } from "./password_validators";
-interface Ipassword {
-  password: string;
-}
-interface Ierror {
-  errorColor: string;
-  errorIndex: number;
-}
-interface IerrorData {
-  errorType: string;
-  errorColor: string;
-  errorText: string;
-  id: number;
-}
-interface IpasswordDgree {
-  testType: string;
-}
+import { subBackGround } from "../../../constants";
+import reducer from "./reducer";
+import passwordValidationCallback from "./password_validator_callback";
+import { Animated } from "react-native";
 
-type Action =
-  | { type: "removeLength"; payload: string }
-  | { type: "length"; payload: IerrorData }
-  | { type: "capitalLetter"; payload: IerrorData }
-  | { type: "removeCapitalLetter"; payload: string }
-  | { type: "number"; payload: IerrorData }
-  | { type: "RemoveNumber"; payload: string }
-  | { type: "symbol"; payload: IerrorData }
-  | { type: "removeSymbol"; payload: string };
-
-const reducer = (state: IerrorData[], action: Action): IerrorData[] => {
-  switch (action.type) {
-    case "length":
-      return [...state, action.payload];
-    case "removeLength":
-      return state.filter((data) => data.errorType !== action.payload);
-
-    case "capitalLetter":
-      return [...state, action.payload];
-    case "removeCapitalLetter":
-      return state.filter((data) => data.errorType !== action.payload);
-
-    case "symbol":
-      return [...state, action.payload];
-    case "removeSymbol":
-      return state.filter((data) => data.errorType !== action.payload);
-
-    case "number":
-      return [...state, action.payload];
-    case "RemoveNumber":
-      return state.filter((data) => data.errorType !== action.payload);
-
-    default:
-      break;
-  }
-};
-
-const initialColors = [];
 const width = Dimensions.get("screen").width;
+
 const PasswordCheckerComponent: React.FC<Ipassword> = (props) => {
+  const containerRef = useRef(new Animated.Value(0)).current
+  const startPageAnimation = useRef(new Animated.Value(0)).current
+  const [targetIndex,setTargetIndex]=useState(0)
   const [text, setText] = useState("very weak");
   const [color, setColor] = useState("red");
-  const [errors, setErrors] = useState<IerrorData[]>([]);
-  const [powerStrengthStyle, setPowerStrengthStyle] = useState(initialColors);
+  const [powerStrengthStyle, setPowerStrengthStyle] = useState<string[]>([subBackGround, subBackGround, subBackGround, subBackGround, subBackGround]);
 
-  const passwordLengthTest: IpasswordDgree = {
-    testType: "length",
-  };
-  const passwordContainCapitalLetterTest: IpasswordDgree = {
-    testType: "capitalType",
-  };
-  const passwordContainNumberTest: IpasswordDgree = {
-    testType: "numberType",
-  };
-  const passwordContainSymbolLetterTest: IpasswordDgree = {
-    testType: "symbol",
-  };
-
+ 
   const [state, dispatch] = useReducer(reducer, []);
 
+
+
+  const containerStartAnimation = (color: string[]) => {
+    Animated.timing(containerRef, {
+      toValue: 0,
+      duration: 300,
+      easing: Easing.inOut(Easing.ease),
+      useNativeDriver: false,
+
+    })
+    .start(() => {
+      Animated.timing(containerRef, {
+        toValue: 1,
+        duration: 300,
+        easing: Easing.inOut(Easing.ease),
+  
+        useNativeDriver: false,
+      })
+      const nextIndex = (targetIndex + 1) % powerStrengthStyle.length; // get the next color index
+        setTargetIndex(nextIndex)
+      setPowerStrengthStyle(color); // update color state after animation is finished
+    });
+  }
+
   const passwordValidator = useCallback(() => {
-    // check if password contain number
-    if (passwordHaveNumberValidator(props.password)) {
-      dispatch({
-        type: "RemoveNumber",
-        payload: passwordContainNumberTest.testType,
-      });
-    } else {
-      if (
-        state.findIndex(
-          (data) => data.errorType === passwordContainNumberTest.testType
-        ) === -1
-      ) {
-        dispatch({
-          type: "number",
-          payload: {
-            id: Math.random(),
-            errorType: passwordContainNumberTest.testType,
-            errorText: "Password length must contain at least one number.",
-            errorColor: "red",
-          },
-        });
-      }
-    }
-    // check if password contain special character
-
-    if (passwordHaveSpecialCharacter(props.password)) {
-      dispatch({
-        type: "removeSymbol",
-        payload: passwordContainSymbolLetterTest.testType,
-      });
-    } else {
-      if (
-        state.findIndex(
-          (data) => data.errorType === passwordContainSymbolLetterTest.testType
-        ) === -1
-      ) {
-        dispatch({
-          type: "symbol",
-          payload: {
-            id: Math.random(),
-            errorType: passwordContainSymbolLetterTest.testType,
-            errorText: "Password must contain at least one special character.",
-            errorColor: "red",
-          },
-        });
-      }
-    }
-
-    // check if password contain capital letter
-    if (passwordHaveCapitalLetter(props.password)) {
-      dispatch({
-        type: "removeCapitalLetter",
-        payload: passwordContainCapitalLetterTest.testType,
-      });
-    } else {
-      if (
-        state.findIndex(
-          (data) => data.errorType === passwordContainCapitalLetterTest.testType
-        ) === -1
-      ) {
-        dispatch({
-          type: "capitalLetter",
-          payload: {
-            id: Math.random(),
-            errorType: passwordContainCapitalLetterTest.testType,
-            errorText: "Password must contain at least one capital letter.",
-            errorColor: "red",
-          },
-        });
-      }
-    }
-    // check for password length
-    if (passwordLength(props.password)) {
-      dispatch({ type: "removeLength", payload: passwordLengthTest.testType });
-    } else {
-      if (
-        state.findIndex(
-          (data) => data.errorType === passwordLengthTest.testType
-        ) === -1
-      ) {
-        dispatch({
-          type: "length",
-          payload: {
-            id: Math.random(),
-            errorType: passwordLengthTest.testType,
-            errorText: "Password must contain at least 8 characters.",
-            errorColor: "red",
-          },
-        });
-      }
-    }
+    passwordValidationCallback(props.password, state, dispatch)
   }, [props.password]);
 
-  useEffect(() => {
+  useEffect(()=>{
     passwordValidator();
 
+  },[props.password])
+  useEffect(() => {
     switch (state.length) {
+     
       case 4:
         setText("Very weak!");
         setColor("red");
+        containerStartAnimation([subBackGround, subBackGround, subBackGround, subBackGround])
+
         break;
+        
       case 3:
-        setText("weak"), setColor("orange");
+        setText("weak");
+        setColor("red");
+        containerStartAnimation(["red", subBackGround, subBackGround, subBackGround])
         break;
       case 2:
         setText("Fair"), setColor("yellow");
+        containerStartAnimation(["yellow", "yellow", subBackGround, subBackGround])
+
         break;
       case 1:
         setText("Strong"), setColor("green");
+        containerStartAnimation(["green", "green", "green", subBackGround])
+
         break;
       case 0:
         setText("Very Strong"), setColor("lime");
+        containerStartAnimation(["lime", "lime", "lime", "lime", ])
+
         break;
 
       default:
         break;
     }
-  }, [props.password]);
+
+
+  }, [state]);
   return (
     <View
       style={[
@@ -216,19 +105,28 @@ const PasswordCheckerComponent: React.FC<Ipassword> = (props) => {
           ]}
         >
           {powerStrengthStyle.map((data, index) => (
-            <View
+            <Animated.View
               key={index}
-              style={{ ...style.containerInitStyle, backgroundColor: data }}
-            ></View>
+              style={{
+                ...style.containerInitStyle, backgroundColor: containerRef.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [data,powerStrengthStyle[targetIndex]],
+
+                })
+              }}
+            ></Animated.View>
           ))}
         </View>
         <Text style={{ color, fontFamily: "normal" }}>{text}</Text>
       </View>
-      {state.map((data) => (
-        <Text key={data.id} style={style.errorText}>
-          {data.errorText}
-        </Text>
-      ))}
+      <View style={style.errorTextContainer}>
+        {state.map((data) => (
+          <Text key={data.id} style={{ ...style.errorText, color: data.errorColor }}>
+            {data.errorText}
+          </Text>
+        ))}
+
+      </View>
     </View>
   );
 };
@@ -260,29 +158,22 @@ const style = StyleSheet.create({
     padding: 2,
     width: width * 0.12,
   },
-
+  errorTextContainer: {
+    width: "90%",
+    justifyContent: "space-evenly",
+    alignItems: "center"
+  },
   checkerContainer: {
     width: "80%",
-    height: "80%",
+
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
   errorText: {
-    color: "orange",
+    padding: 5
   },
 });
-export default PasswordCheckerComponent;
-function passwordHaveNumberValidator(password: string) {
-  throw new Error("Function not implemented.");
-}
 
-function passwordHaveSpecialCharacter() {
-  throw new Error("Function not implemented.");
-}
-
-function passwordHaveCapitalLetter() {
-  throw new Error("Function not implemented.");
-}
-
+export default PasswordCheckerComponent

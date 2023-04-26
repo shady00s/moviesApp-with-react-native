@@ -4,8 +4,9 @@ import { backgroundColor, subBackGround, whiteColor, yellowColor } from "../../.
 import InputTextComponent from "../../components/input_text_component"
 import { useNavigation } from "@react-navigation/native"
 import { SelectImageComponent } from "./select_image_component"
-import PasswordCheckerComponent from "../../components/password_checker_component"
+
 import { KeyboardAvoidingView } from "react-native"
+import PasswordCheckerComponent from "../../components/password_checker/password_checker_component"
 const height = Dimensions.get("screen").height
 const UserIformationComponent: React.FC = () => {
     const navigation = useNavigation<any>()
