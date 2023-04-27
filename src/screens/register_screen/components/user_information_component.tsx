@@ -26,6 +26,7 @@ import { useNavigation } from "@react-navigation/native";
 import { SelectImageComponent } from "./select_image_component";
 
 import PasswordCheckerComponent from "../../components/password_checker/password_checker_component";
+import StepperNavButton from "../../components/stepper/stepper_nav_button";
 const height = Dimensions.get("screen").height;
 const UserIformationComponent: React.FC = () => {
   const initAnimation = useRef(new Animated.Value(0)).current;
@@ -93,7 +94,7 @@ const UserIformationComponent: React.FC = () => {
               onChange={(data) => {}}
               placeholder="Confirm password"
             />
-          <View style={{justifyContent:"center", height: height * 0.2 }}>
+          <View style={{justifyContent:"center", height: height * 0.1 }}>
             <View style={style.registerContainer}>
               <Text style={style.regText}>Already have account?</Text>
               <TouchableOpacity
@@ -104,16 +105,10 @@ const UserIformationComponent: React.FC = () => {
                 <Text style={style.regButton}>Login</Text>
               </TouchableOpacity>
             </View>
-          <View>
-            <TouchableOpacity>
-              <Text>Next</Text>
-            </TouchableOpacity>
-          </View>
+          
           </View>
           </Animated.View>
-          <View style={{height:height*0.1}}>
-
-          </View>
+          
 
 
         </KeyboardAwareScrollView>

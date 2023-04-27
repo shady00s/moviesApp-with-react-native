@@ -46,6 +46,7 @@ const style = StyleSheet.create({
     backgroundColor: subBackGround,
   },
   textInput: {
+    padding:4,
     flex:1,
     color: whiteColor,
   },
