@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
-import { View, StyleSheet, Text, Dimensions, Easing } from "react-native";
+import { View, StyleSheet, Text, Dimensions, Easing, ScrollView } from "react-native";
 import React from "react";
 import { subBackGround } from "../../../constants";
 import reducer from "./reducer";
@@ -105,6 +105,8 @@ const PasswordCheckerComponent: React.FC<Ipassword> = (props) => {
               : { ...style.checkerContainer },
           ]}
         >
+
+         
           {powerStrengthStyle.map((data, index) => (
             <Animated.View
               key={index}
@@ -122,7 +124,7 @@ const PasswordCheckerComponent: React.FC<Ipassword> = (props) => {
       </View>
       <View style={style.errorTextContainer}>
         {state.map((data) => (
-          <ErrorTextComponent error={data.errorText} color={data.errorColor} icon={data.errorColor === "red" ? "close-outline" : "warning-outline"} />
+          <ErrorTextComponent key={data.id} error={data.errorText} color={data.errorColor} icon={data.errorColor === "red" ? "close-outline" : "warning-outline"} />
         ))}
 
       </View>
@@ -133,10 +135,9 @@ const style = StyleSheet.create({
   mainContainer: {
     margin: 2,
     padding: 3,
-    height: "auto",
+    overflow:"scroll",
     width: "85%",
     flexDirection: "column",
-    overflow: "hidden",
     alignItems: "center",
   },
   hideContainer: {
@@ -159,12 +160,11 @@ const style = StyleSheet.create({
   },
   errorTextContainer: {
     width: "90%",
-    justifyContent: "space-evenly",
-    alignItems: "center"
+    justifyContent: "flex-start",
+    alignItems: "flex-start"
   },
   checkerContainer: {
     width: "80%",
-
     flex: 1,
     flexDirection: "row",
     alignItems: "center",

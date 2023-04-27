@@ -36,7 +36,7 @@ const style = StyleSheet.create({
         margin:3,
         width:"100%"
         ,flexDirection:"row",
-        justifyContent:"space-between",
+        justifyContent:"flex-start",
         alignItems:'center'
     }
 })
