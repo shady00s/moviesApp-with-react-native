@@ -5,18 +5,19 @@ import { subBackGround } from "../../../constants";
 import reducer from "./reducer";
 import passwordValidationCallback from "./password_validator_callback";
 import { Animated } from "react-native";
+import ErrorTextComponent from "../error_text_component";
 
 const width = Dimensions.get("screen").width;
 
 const PasswordCheckerComponent: React.FC<Ipassword> = (props) => {
   const containerRef = useRef(new Animated.Value(0)).current
   const startPageAnimation = useRef(new Animated.Value(0)).current
-  const [targetIndex,setTargetIndex]=useState(0)
+  const [targetIndex, setTargetIndex] = useState(0)
   const [text, setText] = useState("very weak");
   const [color, setColor] = useState("red");
   const [powerStrengthStyle, setPowerStrengthStyle] = useState<string[]>([subBackGround, subBackGround, subBackGround, subBackGround, subBackGround]);
 
- 
+
   const [state, dispatch] = useReducer(reducer, []);
 
 
@@ -29,38 +30,38 @@ const PasswordCheckerComponent: React.FC<Ipassword> = (props) => {
       useNativeDriver: false,
 
     })
-    .start(() => {
-      Animated.timing(containerRef, {
-        toValue: 1,
-        duration: 300,
-        easing: Easing.inOut(Easing.ease),
-  
-        useNativeDriver: false,
-      })
-      const nextIndex = (targetIndex + 1) % powerStrengthStyle.length; // get the next color index
+      .start(() => {
+        Animated.timing(containerRef, {
+          toValue: 1,
+          duration: 300,
+          easing: Easing.inOut(Easing.ease),
+
+          useNativeDriver: false,
+        })
+        const nextIndex = (targetIndex + 1) % powerStrengthStyle.length; // get the next color index
         setTargetIndex(nextIndex)
-      setPowerStrengthStyle(color); // update color state after animation is finished
-    });
+        setPowerStrengthStyle(color); // update color state after animation is finished
+      });
   }
 
   const passwordValidator = useCallback(() => {
     passwordValidationCallback(props.password, state, dispatch)
   }, [props.password]);
 
-  useEffect(()=>{
+  useEffect(() => {
     passwordValidator();
 
-  },[props.password])
+  }, [props.password])
   useEffect(() => {
     switch (state.length) {
-     
+
       case 4:
         setText("Very weak!");
         setColor("red");
         containerStartAnimation([subBackGround, subBackGround, subBackGround, subBackGround])
 
         break;
-        
+
       case 3:
         setText("weak");
         setColor("red");
@@ -78,7 +79,7 @@ const PasswordCheckerComponent: React.FC<Ipassword> = (props) => {
         break;
       case 0:
         setText("Very Strong"), setColor("lime");
-        containerStartAnimation(["lime", "lime", "lime", "lime", ])
+        containerStartAnimation(["lime", "lime", "lime", "lime",])
 
         break;
 
@@ -110,7 +111,7 @@ const PasswordCheckerComponent: React.FC<Ipassword> = (props) => {
               style={{
                 ...style.containerInitStyle, backgroundColor: containerRef.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [data,powerStrengthStyle[targetIndex]],
+                  outputRange: [data, powerStrengthStyle[targetIndex]],
 
                 })
               }}
@@ -121,9 +122,7 @@ const PasswordCheckerComponent: React.FC<Ipassword> = (props) => {
       </View>
       <View style={style.errorTextContainer}>
         {state.map((data) => (
-          <Text key={data.id} style={{ ...style.errorText, color: data.errorColor }}>
-            {data.errorText}
-          </Text>
+          <ErrorTextComponent error={data.errorText} color={data.errorColor} icon={data.errorColor === "red" ? "close-outline" : "warning-outline"} />
         ))}
 
       </View>
