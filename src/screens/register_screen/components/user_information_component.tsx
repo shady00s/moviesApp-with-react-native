@@ -13,7 +13,7 @@ import {
   Animated,KeyboardAvoidingView,
   Easing,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   backgroundColor,
   subBackGround,
@@ -27,7 +27,16 @@ import { SelectImageComponent } from "./select_image_component";
 
 import PasswordCheckerComponent from "../../components/password_checker/password_checker_component";
 import StepperNavButton from "../../components/stepper/stepper_nav_button";
+import ErrorTextComponent from "../../components/error_text_component";
 const height = Dimensions.get("screen").height;
+
+
+interface IinputError{
+  name:boolean;
+  password:boolean;
+  email:boolean;
+  confirmPassword:boolean
+}
 const UserIformationComponent: React.FC = () => {
   const initAnimation = useRef(new Animated.Value(0)).current;
 
@@ -38,21 +47,55 @@ const UserIformationComponent: React.FC = () => {
       useNativeDriver: true,
     }).start();
   }, []);
-
   const navigation = useNavigation<any>();
   const [password, setPassword] = useState("");
-  const [inputError, setInputError] = useState({});
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [passwordDetails,setPasswordDetails] = useState(false)
+  
+  const [inputError, setInputError] = useState<IinputError>({
+    name:false,
+    email:false,
+    password:false,
+    confirmPassword:false
+  });
+  
+  const emailValidationChecker = useCallback(()=>{
+    const emailRegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+      console.log(emailRegExp.test(email));
+    if(!emailRegExp.test(email)){
+      setInputError((prevState)=>({ ...prevState, email: true }));
 
-  const passwordConfirmChecker = () => {
-    if (name !== name) {
-      setInputError({ ...inputError, name: true });
-    } else {
-      setInputError({ ...inputError, name: false });
+    }else{
+      setInputError((prevState)=>({ ...prevState, email: false }));
+
     }
-  };
+  },[email])
+  const confirmPasswordChecker = useCallback(() => {
+    if (confirmPassword !== password) {
+      setInputError((prevState)=>({ ...prevState, confirmPassword: true }));
+    } else {
+      setInputError((prevState)=>({ ...prevState, confirmPassword: false }));
+    }
+  },[confirmPassword]);
+
+
+  const nameValidationChecker = useCallback(()=>{
+    // check for name and surname that every name length can be at least 2 and contain only *'* and *-*
+    const nameRegExp = /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/
+    if(name.length === 0){
+      setInputError((prevState)=>({ ...prevState, name: true }));
+
+    }
+    else if (!nameRegExp.test(name)){
+      setInputError((prevState)=>({ ...prevState, name: true }));
+
+    }else{
+      setInputError((prevState)=>({ ...prevState, name: false }));
+
+    }
+  },[name])
   return (
       <View style={{ flex: 1, flexDirection: "column" }}>
           <KeyboardAwareScrollView contentContainerStyle={{flexGrow:0.65}}>
@@ -73,27 +116,41 @@ const UserIformationComponent: React.FC = () => {
           <Animated.View
             style={{flex:0.6, opacity: initAnimation }}
           >
-            <InputTextComponent onChange={(data) => {}} placeholder="Name" />
-
+            <InputTextComponent onChange={(data) => {setName(data) } } placeholder="Name" onBlur={()=>{nameValidationChecker()}} />
+            <View style={{height:inputError.name?
+              "auto":0}}>
+              <ErrorTextComponent error={name.length === 0 ?"Please type your name":"please check your name and the only allowed characters are ' _" }color="red" icon={"close-outline"}/>
+            </View>
             <InputTextComponent
+            onBlur={()=>{emailValidationChecker()}}
               onChange={(data) => {
                 setEmail(data);
               }}
               placeholder="Email"
             />
+            <View style={{height:inputError.email?
+              "auto":0}}>
+              <ErrorTextComponent error="Please check your email address" color="red" icon={"close-outline"}/>
+            </View>
             <InputTextComponent
+            onBlur={()=>{setPasswordDetails(true)}}
               onChange={(data) => {
                 setPassword(data);
               }}
               placeholder="Password"
               isPassword
             />
-            <PasswordCheckerComponent password={password} />
+            <PasswordCheckerComponent password={password} showDetails={passwordDetails} />
             <InputTextComponent
+            onBlur={()=>{confirmPasswordChecker()}}
               isPassword
-              onChange={(data) => {}}
+              onChange={(data) => {setConfirmPassword(data)}}
               placeholder="Confirm password"
             />
+            <View style={{height:inputError.confirmPassword?
+              "auto":0}}>
+              <ErrorTextComponent error="Please check your email address" color="red" icon={"close-outline"}/>
+            </View>
           <View style={{justifyContent:"center", height: height * 0.1 }}>
             <View style={style.registerContainer}>
               <Text style={style.regText}>Already have account?</Text>
@@ -105,7 +162,10 @@ const UserIformationComponent: React.FC = () => {
                 <Text style={style.regButton}>Login</Text>
               </TouchableOpacity>
             </View>
-          
+                  <View>
+                  <StepperNavButton screensNumber={3} navToNextPage={true} isMiddle={false} pageIndex={0}/>
+
+                  </View>
           </View>
           </Animated.View>
           

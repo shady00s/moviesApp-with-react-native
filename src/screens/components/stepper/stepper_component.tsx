@@ -15,7 +15,7 @@ import {
 } from "../../../constants";
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { Dimensions } from "react-native";
-import StepperNavButton from "./stepper_nav_button";
+import StepperPaginationContext from "./context/stepper_pagination_context";
 
 interface screenInterface {
   title: string;
@@ -72,21 +72,6 @@ const Stepper: React.FC<stepperModel> = (props) => {
     }
   }, []);
 
-  const handleNextPage = useCallback((page:number,screensNumber:number)=>{
-    if(page < screensNumber){
-        let newPage:number = page
-        console.log(newPage);
-        setSelectedIndex(() => page+1);
-      }
-},[])
-const handlePrevPage = (page:number)=>{
-    if( page !==0){
-        let newPage:number = page
-        console.log(newPage);
-        setSelectedIndex(() => page-1);
-
-      }  
-}
 
   const changeIndexByCircle = useCallback((index:number) => {
     listRef.current.scrollToIndex({
@@ -101,11 +86,14 @@ const handlePrevPage = (page:number)=>{
     changeIndexByCircle(selectedIndex);
   }, [selectedIndex]);
 
+
+  const [page,setPage] = useState<Ipagination>({screensNumber:props.screens.length,currentIndex:0})
+  const paginationValue = useMemo(()=>({page,setPage}),[page])
   return (
     <>
       <View style={style.mainContianer}>
         {/* indexContainer */}
-
+        <StepperPaginationContext.Provider value={paginationValue}>
         <View style={style.indexContainer}>
           {/* index design */}
           {props.screens.map((screenData, index) => (
@@ -172,6 +160,8 @@ const handlePrevPage = (page:number)=>{
 
         {/* screen body */}
         <View style={{ width: "100%", height: "90%" }}>
+         
+
             <FlatList
               ref={listRef}
               scrollEnabled={false}
@@ -190,11 +180,11 @@ const handlePrevPage = (page:number)=>{
                 <View style={{ flex: 1, width: width.current }}>
                   <Text style={style.text}>{data.item.title}</Text>
                   <data.item.screen/>
-                <StepperNavButton prevPage={()=>handlePrevPage(selectedIndex)} nextPage={()=>handleNextPage(selectedIndex,props.screens.length)} navToNextPage isMiddle={data.index !== 0 && data.index !== data.item.screen.length -1?true:false}/>
                 </View>
               )}
             />
         </View>
+          </StepperPaginationContext.Provider>
       </View>
     </>
   );

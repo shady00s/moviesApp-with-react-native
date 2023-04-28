@@ -79,7 +79,8 @@ const style = StyleSheet.create({
     profileImage: {
         width: 60,
         height: 60,
-        borderRadius: 9999
+        borderRadius: 9999,
+        margin:5
     },
     imagePicker: {
         flex:0.3,

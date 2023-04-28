@@ -122,7 +122,7 @@ const PasswordCheckerComponent: React.FC<Ipassword> = (props) => {
         </View>
         <Text style={{ color, fontFamily: "normal" }}>{text}</Text>
       </View>
-      <View style={style.errorTextContainer}>
+      <View style={[{...style.errorTextContainer,height:props.showDetails?"auto":0}]}>
         {state.map((data) => (
           <ErrorTextComponent key={data.id} error={data.errorText} color={data.errorColor} icon={data.errorColor === "red" ? "close-outline" : "warning-outline"} />
         ))}
@@ -159,6 +159,7 @@ const style = StyleSheet.create({
     width: width * 0.12,
   },
   errorTextContainer: {
+    overflow:"hidden",
     width: "90%",
     justifyContent: "flex-start",
     alignItems: "flex-start"

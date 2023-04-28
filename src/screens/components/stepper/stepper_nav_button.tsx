@@ -1,33 +1,47 @@
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { subBackGround, yellowColor } from "../../../constants";
 import Ionicons from '@expo/vector-icons/Ionicons';
-import React from "react";
+import React, { useCallback, useContext, useState } from "react";
+import StepperPaginationContext from "./context/stepper_pagination_context";
 
 interface IstepperNavButton {
   isMiddle: boolean;
   navToNextPage:boolean;
-  nextPage:()=>void,
-  prevPage:()=>void
+  pageIndex:number,
+  screensNumber:number
+
 }
-interface Ipagination{
-    pageIndex:number,
-    screensNumber:number
-  }
+
 
 const StepperNavButton: React.FC<IstepperNavButton> = (props) => {
+  const {page,setPage} = useContext(StepperPaginationContext)
+  const [selectedIndex,setSelectedIndex] = useState(props.pageIndex)
+  const handleNextPage = useCallback(()=>{
+    if(page.currentIndex < page.screensNumber){
+        
+        setPage(() => selectedIndex+1);
+      }
+},[])
+const handlePrevPage = ()=>{
+    if( selectedIndex !==0){
+        
+        setSelectedIndex(() => selectedIndex-1);
+
+      }  
+}
 
   return (
     <>
       {props.isMiddle ? (
         <View style={style.nextPrevContainer}>
-            <TouchableOpacity onPress={props.prevPage}>
+            <TouchableOpacity onPress={()=>{handlePrevPage()}}>
             <View style={style.nextButton}>
             <Ionicons color={"rgba(142,142,142,0.8)"} name="arrow-back-outline"/>
 
                 <Text style={style.prevButton}>Prev</Text>
                 </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={props.nextPage}>
+            <TouchableOpacity disabled={!props.navToNextPage} onPress={()=>{handleNextPage()}}>
                 <View style={style.nextButton}>
                 <Text style={style.nextText}>Next</Text>
                 <Ionicons color={yellowColor} name="arrow-forward-outline"/>
@@ -36,7 +50,7 @@ const StepperNavButton: React.FC<IstepperNavButton> = (props) => {
         </View>
       ) : (
         <View style={style.nextContainer}>
-          <TouchableOpacity onPress={props.nextPage}>
+          <TouchableOpacity disabled={!props.navToNextPage} onPress={()=>{handleNextPage()}}>
             <View style={style.nextButton}>
                 <Text style={style.nextText}>Next</Text>
                 <Ionicons  color={yellowColor} size={16} name="arrow-forward-outline"/>

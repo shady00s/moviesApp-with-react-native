@@ -5,12 +5,12 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 interface IinputText {
   placeholder: string;
   onChange: (data: string) => void;
-  isPassword?:boolean
+  isPassword?:boolean;
+  onBlur:()=>void
 }
 
 const InputTextComponent: React.FC<IinputText> = (props) => {
   const [showPass,setShowPass] = useState(props.isPassword)
-  const [passIcon,setPassIcon] = useState("eye-outline")
   function handlePasswordVisibility(){
       setShowPass(!showPass)
   }
@@ -21,6 +21,7 @@ const InputTextComponent: React.FC<IinputText> = (props) => {
         name={"pencil-outline"}
       />
       <TextInput
+      onBlur={()=>{props.onBlur()}}
       autoCapitalize="none"
       secureTextEntry={showPass}
         onChangeText={props.onChange}

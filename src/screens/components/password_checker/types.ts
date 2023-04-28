@@ -1,5 +1,6 @@
 interface Ipassword {
     password: string;
+    showDetails:boolean
   }
   interface Ierror {
     errorColor: string;
