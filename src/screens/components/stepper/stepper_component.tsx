@@ -16,10 +16,11 @@ import {
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { Dimensions } from "react-native";
 import StepperPaginationContext from "./context/stepper_pagination_context";
+import { Animated } from "react-native";
 
 interface screenInterface {
   title: string;
-  screen:React.FC
+  screen: React.FC
 }
 
 interface stepperModel {
@@ -60,131 +61,142 @@ const Separator: React.FC<separator> = (props) => {
   );
 };
 const Stepper: React.FC<stepperModel> = (props) => {
- 
+
   const width = useRef(Dimensions.get("window").width);
-  const listRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
-  const currentIndex = useCallback(({ viewableItems, changed }) => {
-    if (viewableItems.length > 0) {
-      const index = viewableItems[0].index;
-      setSelectedIndex(() => index);
+  const [page, setPage] = useState<Ipagination>({ screensNumber: props.screens.length, currentIndex: 0 })
+  const paginationValue = useMemo(() => ({ page, setPage }), [page])
+  const animateOffset = useRef(new Animated.Value(0)).current
+  const scrollWidth = 100 / props.screens.length
+  const changeIndexByCircle = useCallback((index: number) => {
+    setPage((prev)=>({...prev,currentIndex:index}))
+    setSelectedIndex(() => index);
+    let scrollRange = (-width.current  * index ) +35
+    if (index > 0) {
+      Animated.timing(animateOffset, { useNativeDriver: true, duration: 200, toValue: scrollRange }).start()
+
+    }else if(index==0){
+      Animated.timing(animateOffset, { useNativeDriver: true, duration: 200, toValue: scrollWidth }).start()
+
+    } else {
+      Animated.timing(animateOffset, { useNativeDriver: true, duration: 200, toValue: -(scrollRange) + width.current }).start()
+
     }
   }, []);
 
 
-  const changeIndexByCircle = useCallback((index:number) => {
-    listRef.current.scrollToIndex({
-      index: index,
-      animated: true,
-      viewOffset: 0,
-      viewPosition: 0,
-    });
-    setSelectedIndex(() => index);
-  }, []);
-  useEffect(() => {
-    changeIndexByCircle(selectedIndex);
-  }, [selectedIndex]);
+  const changeIndexByNavButtons = useCallback(() => {
+    console.log(page.currentIndex);
+    let scrollRange = (-width.current  * page.currentIndex ) +35
+    if (page.currentIndex > 0) {
+      Animated.timing(animateOffset, { useNativeDriver: true, duration: 200, toValue: scrollRange }).start()
 
+    }else if(page.currentIndex==0){
+      Animated.timing(animateOffset, { useNativeDriver: true, duration: 200, toValue: scrollWidth }).start()
 
-  const [page,setPage] = useState<Ipagination>({screensNumber:props.screens.length,currentIndex:0})
-  const paginationValue = useMemo(()=>({page,setPage}),[page])
+    } else {
+      Animated.timing(animateOffset, { useNativeDriver: true, duration: 200, toValue: -(scrollRange) + width.current }).start()
+
+    }
+    setSelectedIndex(() => page.currentIndex);
+  }, [page.currentIndex])
+
+  
+
+  useEffect(() => { changeIndexByNavButtons() }, [page.currentIndex])
   return (
     <>
       <View style={style.mainContianer}>
         {/* indexContainer */}
         <StepperPaginationContext.Provider value={paginationValue}>
-        <View style={style.indexContainer}>
-          {/* index design */}
-          {props.screens.map((screenData, index) => (
-            <View
-              key={index}
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "stretch",
-              }}
-            >
-              <TouchableOpacity
-                shouldActivateOnStart={false}
+          <View style={style.indexContainer}>
+            {/* index design */}
+            {props.screens.map((screenData, index) => (
+              <View
                 key={index}
-                onPress={() => {
-                  changeIndexByCircle(index);
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "stretch",
                 }}
-                style={{ ...style.indexButton }}
               >
-                <View
-                  style={[
-                    { ...style.circleBody },
-                    {
-                      backgroundColor:
-                        selectedIndex === index ? yellowColor : subBackGround,
-                    },
-                  ]}
+                <TouchableOpacity
+                  shouldActivateOnStart={false}
+                  key={index}
+                  onPress={() => {
+                    changeIndexByCircle(index);
+
+                  }}
+                  style={{ ...style.indexButton }}
                 >
-                  <Text
+                  <View
                     style={[
-                      { ...style.circleIndex },
+                      { ...style.circleBody },
                       {
-                        color:
-                          selectedIndex === index
-                            ? backgroundColor
-                            : yellowColor,
+                        backgroundColor:
+                          selectedIndex === index ? yellowColor : subBackGround,
                       },
                     ]}
                   >
-                    {index + 1}
-                  </Text>
-                </View>
-                {index !== props.screens.length - 1 ? (
-                  <View
-                    style={{
-                      width: Math.round(
-                        width.current / props.screens.length -
-                          props.screens.length * props.screens.length
-                      ),
-                    }}
-                  >
-                    <Separator
-                      number={0}
-                      color={
-                        selectedIndex === index ? yellowColor : subBackGround
-                      }
-                    />
+                    <Text
+                      style={[
+                        { ...style.circleIndex },
+                        {
+                          color:
+                            selectedIndex === index
+                              ? backgroundColor
+                              : yellowColor,
+                        },
+                      ]}
+                    >
+                      {index + 1}
+                    </Text>
                   </View>
-                ) : null}
-              </TouchableOpacity>
-            </View>
-          ))}
-        </View>
+                  {index !== props.screens.length - 1 ? (
+                    <View
+                      style={{
+                        width: Math.round(
+                          width.current / props.screens.length -
+                          props.screens.length * props.screens.length
+                        ),
+                      }}
+                    >
+                      <Separator
+                        number={0}
+                        color={
+                          selectedIndex === index ? yellowColor : subBackGround
+                        }
+                      />
+                    </View>
+                  ) : null}
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
 
-        {/* screen body */}
-        <View style={{ width: "100%", height: "90%" }}>
-         
+          {/* screen body */}
+          <Animated.View style={{
+            width: `${props.screens.length * 100}%`,
+            flexDirection: "row",
+            justifyContent:"center",
+            alignItems:"center"
+          }}>
 
-            <FlatList
-              ref={listRef}
-              scrollEnabled={false}
-              initialScrollIndex={0}
-              data={props.screens}
-              showsHorizontalScrollIndicator={false}
-              horizontal={true}
-              pagingEnabled={true}
-              keyExtractor={() =>(Math.random()*199).toString()}
-              getItemLayout={(data, index) => ({
-                length: width.current,
-                offset: width.current * index,
-                index,
-              })}
-              renderItem={(data) => (
-                <View style={{ flex: 1, width: width.current }}>
-                  <Text style={style.text}>{data.item.title}</Text>
-                  <data.item.screen/>
-                </View>
-              )}
-            />
-        </View>
-          </StepperPaginationContext.Provider>
+
+            {props.screens.map((data, index) => <Animated.View style={{
+              flexDirection: "row",
+              justifyContent:"center",
+              alignItems:"center",
+
+              width: `35%`,
+              height: "100%",
+              transform: [{ translateX: animateOffset }]
+            }}><data.screen key={index} /></Animated.View>)}
+
+
+          </Animated.View>
+        </StepperPaginationContext.Provider>
       </View>
     </>
   );

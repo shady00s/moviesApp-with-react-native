@@ -15,17 +15,21 @@ interface IstepperNavButton {
 
 const StepperNavButton: React.FC<IstepperNavButton> = (props) => {
   const {page,setPage} = useContext(StepperPaginationContext)
-  const [selectedIndex,setSelectedIndex] = useState(props.pageIndex)
   const handleNextPage = useCallback(()=>{
-    if(page.currentIndex < page.screensNumber){
-        
-        setPage(() => selectedIndex+1);
+    if(page.currentIndex < page.screensNumber-1){
+        let newIndex = page.currentIndex +1
+
+
+        setPage((prev) => ({...prev,currentIndex:newIndex}));
+
+       
       }
-},[])
+},[page.currentIndex])
 const handlePrevPage = ()=>{
-    if( selectedIndex !==0){
-        
-        setSelectedIndex(() => selectedIndex-1);
+    if( page.currentIndex !==0){
+      let newIndex = page.currentIndex -1
+      setPage((prev) => ({...prev,currentIndex:newIndex}));
+
 
       }  
 }
@@ -99,4 +103,4 @@ const style = StyleSheet.create({
     }
 
 })
-export default React.memo(StepperNavButton);
+export default StepperNavButton;
