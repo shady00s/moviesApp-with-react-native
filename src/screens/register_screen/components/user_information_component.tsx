@@ -97,7 +97,7 @@ const UserIformationComponent: React.FC = () => {
     }
   },[name])
   return (
-      <View style={{ flex: 1, flexDirection: "column" }}>
+      <View style={{ flex: 1,height:"90%", flexDirection: "column" }}>
           <KeyboardAwareScrollView contentContainerStyle={{flexGrow:0.65}}>
       <Animated.View style={[style.titleContainer, { opacity: initAnimation }]}>
         <Text style={style.introText}>Complete your profile</Text>
@@ -151,7 +151,7 @@ const UserIformationComponent: React.FC = () => {
               "auto":0}}>
               <ErrorTextComponent error="Please check your email address" color="red" icon={"close-outline"}/>
             </View>
-          <View style={{justifyContent:"center", height: height * 0.1 }}>
+          <View style={{justifyContent:"center", height: height * 0.18 }}>
             <View style={style.registerContainer}>
               <Text style={style.regText}>Already have account?</Text>
               <TouchableOpacity
@@ -191,13 +191,16 @@ const style = StyleSheet.create({
   },
   registerContainer: {
     justifyContent:"center",
+    marginLeft:3,
     paddingTop: 9,
     paddingLeft:7,
+    paddingRight:4,
     flexDirection: "row",
     width: "55%",
 
   },
   regText: {
+    marginLeft:3,
     paddingRight: 4,
     color: whiteColor,
     fontFamily: "medium",

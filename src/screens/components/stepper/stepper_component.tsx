@@ -178,13 +178,15 @@ const Stepper: React.FC<stepperModel> = (props) => {
           {/* screen body */}
           <Animated.View style={{
             width: `${props.screens.length * 100}%`,
+            height:"100%",
+            flex:1,
             flexDirection: "row",
             justifyContent:"center",
             alignItems:"center"
           }}>
 
 
-            {props.screens.map((data, index) => <Animated.View style={{
+            {props.screens.map((data, index) => <Animated.View key={index} style={{
               flexDirection: "row",
               justifyContent:"center",
               alignItems:"center",
@@ -192,7 +194,7 @@ const Stepper: React.FC<stepperModel> = (props) => {
               width: `35%`,
               height: "100%",
               transform: [{ translateX: animateOffset }]
-            }}><data.screen key={index} /></Animated.View>)}
+            }}><data.screen  /></Animated.View>)}
 
 
           </Animated.View>
@@ -205,6 +207,7 @@ const Stepper: React.FC<stepperModel> = (props) => {
 const style = StyleSheet.create({
   mainContianer: {
     width: "95%",
+    height:"100%",
     backgroundColor: backgroundColor,
     margin: 8,
     padding: 3,
