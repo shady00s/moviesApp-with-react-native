@@ -29,7 +29,7 @@ const style = StyleSheet.create({
     padding:6,
     width: "100%",
     height: "100%",
-    resizeMode: "contain",
+    resizeMode: "cover",
     borderRadius: 21,
   },
 });
