@@ -28,6 +28,7 @@ import { SelectImageComponent } from "./select_image_component";
 import PasswordCheckerComponent from "../../components/password_checker/password_checker_component";
 import StepperNavButton from "../../components/stepper/stepper_nav_button";
 import ErrorTextComponent from "../../components/error_text_component";
+import globalStyle from "../../components/global_styles";
 const height = Dimensions.get("screen").height;
 
 
@@ -100,8 +101,8 @@ const UserIformationComponent: React.FC = () => {
       <View style={{ flex: 1,height:"90%", flexDirection: "column" }}>
           <KeyboardAwareScrollView contentContainerStyle={{flexGrow:0.65}}>
       <Animated.View style={[style.titleContainer, { opacity: initAnimation }]}>
-        <Text style={style.introText}>Complete your profile</Text>
-        <Text style={style.introSubtext}>
+        <Text style={globalStyle.title}>Complete your profile</Text>
+        <Text style={globalStyle.subTitle}>
           Add image for you, your name and set password for your profile.
         </Text>
       </Animated.View>
@@ -210,14 +211,5 @@ const style = StyleSheet.create({
     color: yellowColor,
   },
 
-  introText: {
-    color: whiteColor,
-    fontFamily: "bold",
-    fontSize: 19,
-  },
-  introSubtext: {
-    fontFamily: "normal",
-    color: "rgba(162,162,162,0.6)",
-    padding: 12,
-  },
+  
 });
