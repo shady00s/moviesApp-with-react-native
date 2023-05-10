@@ -16,22 +16,46 @@ import {
   whiteColor,
   yellowColor,
 } from "../../../constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import globalStyle from "../../components/global_styles";
-import { getLocales } from 'expo-localization';
+import * as Localization from 'expo-localization';
 
-console.log(getLocales());
+import  * as Location  from 'expo-location';
+import { CountryCode } from "react-native-country-picker-modal";
 interface IuserData{
     preventAdult: boolean,
     themeIsDark:boolean,
-    region:string
+    region:CountryCode
 }
 export default function ProfileAndRegionSetComponent() {
   const [userData, setUserData] = useState<IuserData>({
-        preventAdult:true,
-        themeIsDark:true,
-        region:"Eg"
-  });
+    preventAdult:true,
+    themeIsDark:true,
+    region:"EG"
+});
+  async function  getLocationData(){
+    try {
+        // ask for permission to access the user's location
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.log('Permission to access location was denied');
+      return null;
+    }
+  
+    // get the user's current position (latitude and longitude)
+    const { coords } = await Location.getCurrentPositionAsync({});
+    const address = await Location.reverseGeocodeAsync({ latitude: coords.latitude, longitude: coords.longitude });
+    const country = address[0].isoCountryCode as CountryCode;
+    setUserData((prev)=>({...prev,region:country}))
+    
+    } catch (error) {
+      console.log(error);
+  
+    }
+   }
+
+
+  useEffect(()=>{getLocationData()},[])
 
   return (
     <>
@@ -39,12 +63,12 @@ export default function ProfileAndRegionSetComponent() {
         <Text style={globalStyle.title}>Profile settings</Text>
         <Text style={{ ...globalStyle.smallerTitle, padding: 12 }}>Region</Text>
 
-        <DropdownComponent />
+        <DropdownComponent countryCode={userData.region}/>
         {/* prevent audlt content */}
         <View style={style.switchContainer}>
-            <View style={{padding:2}}>
+            <View style={{padding:6,width:"80%"}}>
                   <Text style={globalStyle.text}>Don't allow for audlt content</Text>
-                  <Text style={globalStyle.subTitle}>This option is activated by default,it prevents to show audlt</Text>
+                  <Text style={globalStyle.subTitle}>This option is activated by default,it prevents to show audlt content</Text>
             </View>
           <Switch  value={userData.preventAdult} onValueChange={(val)=>{
             setUserData((prev)=>({...prev,preventAdult:val}))
@@ -202,7 +226,7 @@ export default function ProfileAndRegionSetComponent() {
         <StepperNavButton
           navToNextPage={true}
           isMiddle={true}
-          pageIndex={1}
+        
           screensNumber={4}
         />
       </View>
@@ -231,7 +255,7 @@ const style = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: Dimensions.get("screen").width * 0.4,
-    height: "75%",
+    
   },
   themeCard: {
     justifyContent: "flex-end",

@@ -4,18 +4,12 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import React, { useCallback, useContext, useState } from "react";
 import StepperPaginationContext from "./context/stepper_pagination_context";
 
-interface IstepperNavButton {
-  isMiddle: boolean;
-  navToNextPage:boolean;
-  pageIndex:number,
-  screensNumber:number
 
-}
 
 
 const StepperNavButton: React.FC<IstepperNavButton> = (props) => {
   const {page,setPage} = useContext(StepperPaginationContext)
-  const handleNextPage = useCallback(()=>{
+  const handleNextPage =  useCallback(()=>{
     if(page.currentIndex < page.screensNumber-1){
         let newIndex = page.currentIndex +1
 
@@ -25,14 +19,14 @@ const StepperNavButton: React.FC<IstepperNavButton> = (props) => {
        
       }
 },[page.currentIndex])
-const handlePrevPage = ()=>{
-    if( page.currentIndex !==0){
+const handlePrevPage =  useCallback(()=>{
+    if( page.currentIndex > 0 ){
       let newIndex = page.currentIndex -1
       setPage((prev) => ({...prev,currentIndex:newIndex}));
 
 
       }  
-}
+},[page.currentIndex])
 
   return (
     <>

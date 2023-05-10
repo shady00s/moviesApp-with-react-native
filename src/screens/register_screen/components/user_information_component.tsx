@@ -164,7 +164,7 @@ const UserIformationComponent: React.FC = () => {
               </TouchableOpacity>
             </View>
                   <View>
-                  <StepperNavButton screensNumber={3} navToNextPage={true} isMiddle={false} pageIndex={0}/>
+                  <StepperNavButton screensNumber={4} navToNextPage={true} isMiddle={false}/>
 
                   </View>
           </View>

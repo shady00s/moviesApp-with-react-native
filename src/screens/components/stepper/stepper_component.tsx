@@ -18,25 +18,16 @@ import { Dimensions } from "react-native";
 import StepperPaginationContext from "./context/stepper_pagination_context";
 import { Animated } from "react-native";
 
-interface screenInterface {
-  title: string;
-  screen: React.FC
-}
 
-interface stepperModel {
-  screens: screenInterface[];
-  indexColor: string;
-}
 
-interface separator {
-  number: number;
-  color: string;
-}
 
 
 
 // separator line
 const Separator: React.FC<separator> = (props) => {
+
+
+
   return (
     // main separator container
     <View
@@ -69,33 +60,30 @@ const Stepper: React.FC<stepperModel> = (props) => {
   const paginationValue = useMemo(() => ({ page, setPage }), [page])
   const animateOffset = useRef(new Animated.Value(0)).current
   const scrollWidth = (100 / props.screens.length)
-  const changeIndexByCircle = useCallback((index: number) => {
 
-    if(index !== page.currentIndex ){
-      setPage((prev)=>({...prev,currentIndex:index}))
-      
-      setSelectedIndex(() => index);
+  
+  const changeIndexByCircle = useCallback((index: number) => {
+      if( index !== page.currentIndex){
+        setSelectedIndex(()=>index)
+        setPage((prev)=>({...prev,currentIndex:index}))
   
         Animated.timing(animateOffset, { useNativeDriver: true, duration: 200, toValue: scrollWidth }).start()
-    }
 
-  }, []);
+      }
+  }, [page.currentIndex]);
 
 
   const changeIndexByNavButtons = useCallback(() => {
     let scrollRange = (-width.current  * page.currentIndex ) + (width.current * 0.070 * page.currentIndex)
-    if (page.currentIndex > 0) {
+   
       Animated.timing(animateOffset, { useNativeDriver: true, duration: 200, toValue: scrollRange }).start()
       setSelectedIndex(() => page.currentIndex);
 
-    }
+    
   }, [page.currentIndex])
 
   
-useEffect(()=>{
-  Animated.timing(animateOffset, { useNativeDriver: true, duration: 200, toValue: scrollWidth }).start()
 
-},[])
   useEffect(() => { changeIndexByNavButtons() }, [page.currentIndex])
   return (
     <>

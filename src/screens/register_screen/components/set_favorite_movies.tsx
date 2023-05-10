@@ -67,7 +67,7 @@ const SetFavoriteMoviesComponent:React.FC = ()=>{
 
                      </View>
                 <View style={{height:"15%"}}>
-                  <StepperNavButton screensNumber={4} navToNextPage={true} isMiddle={true} pageIndex={2}/>
+                  <StepperNavButton screensNumber={4} navToNextPage={true} isMiddle={true} />
 
                   </View>
             </View>
