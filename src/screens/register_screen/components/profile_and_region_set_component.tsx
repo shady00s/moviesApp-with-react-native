@@ -221,12 +221,15 @@ export default function ProfileAndRegionSetComponent() {
             </View>
           </TouchableOpacity>
         </View>
+       
         <StepperNavButton
           navToNextPage={true}
           isMiddle={true}
         
           screensNumber={4}
         />
+   
+    
       </View>
     </>
   );
@@ -235,6 +238,7 @@ export default function ProfileAndRegionSetComponent() {
 const style = StyleSheet.create({
   main: {
     flex: 1,
+    overflow:"hidden"
   },
   switchContainer: {
     padding: 6,
@@ -245,6 +249,7 @@ const style = StyleSheet.create({
   themeContainer: {
     flexDirection: "row",
     flex: 0.8,
+
     justifyContent: "space-evenly",
     alignItems: "center",
   },
@@ -252,13 +257,13 @@ const style = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    width: Dimensions.get("screen").width * 0.4,
+    width: Dimensions.get("screen").width * 0.35,
     
   },
   themeCard: {
     justifyContent: "flex-end",
     width: "100%",
-    height: "80%",
+    
     borderRadius: 21,
   },
   lightTheme: {
@@ -278,7 +283,7 @@ const style = StyleSheet.create({
   },
   skeletonBar: {
     width: "100%",
-    height: "48%",
+    height: "44%",
     backgroundColor: lightGrayColor,
   },
   textLight: {

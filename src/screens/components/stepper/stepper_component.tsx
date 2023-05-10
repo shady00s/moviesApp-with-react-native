@@ -87,7 +87,7 @@ const Stepper: React.FC<stepperModel> = (props) => {
 
 
   const changeIndexByCircle = useCallback((index: number) => {
-    if (index !== page.currentIndex) {
+    if (index !== page.currentIndex && index <= page.currentIndex) {
       setSelectedIndex(() => index)
 
       setPage((prev) => ({ ...prev, currentIndex: index }))
@@ -110,7 +110,6 @@ const Stepper: React.FC<stepperModel> = (props) => {
 
   useEffect(()=>{
     if(stepperColor.length === 0 ){
-      console.log(true);
       stepperColorInitFunction()
     }
   },[stepperColor])

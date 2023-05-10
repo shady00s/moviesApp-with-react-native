@@ -98,8 +98,8 @@ const UserIformationComponent: React.FC = () => {
     }
   },[name])
   return (
-      <View style={{ flex: 1,height:"90%", flexDirection: "column" }}>
-          <KeyboardAwareScrollView contentContainerStyle={{flexGrow:0.65}}>
+     
+          <KeyboardAwareScrollView contentContainerStyle={{flexGrow:1}}>
       <Animated.View style={[style.titleContainer, { opacity: initAnimation }]}>
         <Text style={globalStyle.title}>Complete your profile</Text>
         <Text style={globalStyle.subTitle}>
@@ -108,14 +108,14 @@ const UserIformationComponent: React.FC = () => {
       </Animated.View>
           {/* image picker */}
           <Animated.View
-            style={{ height: height * 0.15,justifyContent:"center", opacity: initAnimation }}
+            style={{justifyContent:"center", opacity: initAnimation }}
           >
             <SelectImageComponent />
           </Animated.View>
           {/* input container */}
         
           <Animated.View
-            style={{flex:0.6, opacity: initAnimation }}
+            style={{ opacity: initAnimation }}
           >
             <InputTextComponent onChange={(data) => {setName(data) } } placeholder="Name" onBlur={()=>{nameValidationChecker()}} />
             <View style={{height:inputError.name?
@@ -152,7 +152,7 @@ const UserIformationComponent: React.FC = () => {
               "auto":0}}>
               <ErrorTextComponent error="Please check your email address" color="red" icon={"close-outline"}/>
             </View>
-          <View style={{justifyContent:"center", height: height * 0.18 }}>
+        
             <View style={style.registerContainer}>
               <Text style={style.regText}>Already have account?</Text>
               <TouchableOpacity
@@ -162,18 +162,21 @@ const UserIformationComponent: React.FC = () => {
               >
                 <Text style={style.regButton}>Login</Text>
               </TouchableOpacity>
+              
+              
             </View>
-                  <View>
-                  <StepperNavButton screensNumber={4} navToNextPage={true} isMiddle={false}/>
-
-                  </View>
-          </View>
+            
+         
+ 
           </Animated.View>
-          
+        
+          <View style={{height:92,width:"100%",alignItems:"flex-start", justifyContent:"flex-start"}}>
 
-
+<StepperNavButton isMiddle={false} navToNextPage={true} screensNumber={4}/>
+</View>
+       
         </KeyboardAwareScrollView>
-    </View>
+
   );
 };
 
@@ -181,7 +184,8 @@ export default React.memo(UserIformationComponent);
 
 const style = StyleSheet.create({
   titleContainer: {
-    height: height * 0.15,
+      paddingHorizontal:21,
+      paddingVertical:18,
     justifyContent: "flex-end",
   },
 
@@ -191,13 +195,15 @@ const style = StyleSheet.create({
     color: whiteColor,
   },
   registerContainer: {
+    alignItems:"flex-start",
     justifyContent:"center",
     marginLeft:3,
     paddingTop: 9,
     paddingLeft:7,
     paddingRight:4,
     flexDirection: "row",
-    width: "55%",
+    width: "80%",
+   
 
   },
   regText: {
