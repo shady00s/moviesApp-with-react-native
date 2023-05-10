@@ -24,3 +24,8 @@ interface screenInterface {
     number: number;
     color: string;
   }
+
+
+  interface IstepperColor{
+    backGroundColor: string, color: string, index: number
+  }

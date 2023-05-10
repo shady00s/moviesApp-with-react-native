@@ -18,8 +18,6 @@ import {
 } from "../../../constants";
 import { useEffect, useState } from "react";
 import globalStyle from "../../components/global_styles";
-import * as Localization from 'expo-localization';
-
 import  * as Location  from 'expo-location';
 import { CountryCode } from "react-native-country-picker-modal";
 interface IuserData{
