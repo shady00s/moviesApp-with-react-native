@@ -16,6 +16,7 @@ import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { Dimensions } from "react-native";
 import StepperPaginationContext from "./context/stepper_pagination_context";
 import { Animated } from "react-native";
+import MainViewComponent from "../main_view_component";
 
 
 
@@ -122,9 +123,9 @@ const Stepper: React.FC<stepperModel> = (props) => {
   return (
     <>
       <SafeAreaView style={{ paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 }}>
-        <View style={style.mainContianer}>
-          {/* indexContainer */}
           <StepperPaginationContext.Provider value={paginationValue}>
+        <MainViewComponent style={style.mainContianer}>
+          {/* indexContainer */}
             <View style={style.indexContainer}>
               {/* index design */}
               {props.screens.map((screenData, index) => (
@@ -143,7 +144,7 @@ const Stepper: React.FC<stepperModel> = (props) => {
                       changeIndexByCircle(index);
 
                     }}
-                    style={{ ...style.indexButton, backgroundColor }}
+                    style={{ ...style.indexButton, }}
                   >
                     <View
                       style={[
@@ -189,7 +190,7 @@ const Stepper: React.FC<stepperModel> = (props) => {
             </View>
 
             {/* screen body */}
-            <Animated.View style={{
+            <View style={{
               width: `${props.screens.length * 100}%`,
               height: "90%",
               flexDirection: "row",
@@ -209,9 +210,9 @@ const Stepper: React.FC<stepperModel> = (props) => {
               }}><data.screen /></Animated.View>)}
 
 
-            </Animated.View>
+            </View>
+        </MainViewComponent>
           </StepperPaginationContext.Provider>
-        </View>
 
       </SafeAreaView>
     </>
@@ -222,7 +223,6 @@ const style = StyleSheet.create({
   mainContianer: {
     width: "95%",
     height: "100%",
-    backgroundColor: backgroundColor,
     margin: 8,
     padding: 3,
   },

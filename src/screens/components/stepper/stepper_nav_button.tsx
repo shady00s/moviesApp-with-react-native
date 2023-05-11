@@ -9,8 +9,7 @@ import StepperPaginationContext from "./context/stepper_pagination_context";
 
 const StepperNavButton: React.FC<IstepperNavButton> = (props) => {
   const { page, setPage } = useContext(StepperPaginationContext)
-  const [showError, setShowError] = useState(props.navToNextPage)
-  console.log(showError);
+  const [showError, setShowError] = useState(!props.navToNextPage)
   useEffect(() => {
     if (showError) {
       setTimeout(() => {

@@ -203,7 +203,7 @@ const style = StyleSheet.create({
     paddingRight:4,
     flexDirection: "row",
     width: "80%",
-   
+   height:Dimensions.get("screen").height* 0.12
 
   },
   regText: {

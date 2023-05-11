@@ -6,11 +6,12 @@ import user_information_component from "./components/user_information_component"
 import set_favorite_movies from "./components/set_favorite_movies";
 import ProfileAndRegionSetComponent from "./components/profile_and_region_set_component";
 import FinishRegComponet from "./components/finish_registration_page";
+import MainViewComponent from "../components/main_view_component";
 export default function RegisterScreen(){
    
     return(
         <SafeAreaView>
-            <View style={style.container}>
+            <MainViewComponent style={style.container}>
                 
                     <Text style={style.text}>Create new account</Text>
 
@@ -23,7 +24,7 @@ export default function RegisterScreen(){
                         
                     ]}  indexColor={""}/>
                 
-            </View>
+            </MainViewComponent>
 
         </SafeAreaView>
     )
@@ -33,7 +34,6 @@ export default function RegisterScreen(){
 
 const style = StyleSheet.create({
     container:{
-        backgroundColor:backgroundColor,
         width:"100%",
         height:"100%"
     },

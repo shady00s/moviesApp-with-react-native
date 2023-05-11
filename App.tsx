@@ -2,15 +2,19 @@ import { NavigationContainer } from "@react-navigation/native";
 import StackNavigation from "./src/navigation/stack_navigation";
 import { useFonts } from "expo-font";
 import { View, Image } from "react-native";
-import { backgroundColor } from "./src/constants";
+import { backgroundColor, whiteColor } from "./src/constants";
 import { StatusBar } from "expo-status-bar";
+import ThemeContext from "./src/context/theme_context";
+import { useMemo, useState } from "react";
 
 export default function App() {
   const [loaded] = useFonts({
     medium: require("./assets/fonts/Montserrat-Medium.ttf"),
     bold: require("./assets/fonts/Montserrat-SemiBold.ttf"),
   });
+    const [themeData,setThemeData] = useState("dark")
 
+    const themeDataValue = useMemo(()=>({themeData,setThemeData}),[themeData])
   if (!loaded) {
     return (
       <>
@@ -37,12 +41,16 @@ export default function App() {
       </>
     );
   }
+
   return (
-    <>
-     <StatusBar backgroundColor={backgroundColor} style={'light'}/>
+   <ThemeContext.Provider value={themeDataValue}>
+     <>
+     <StatusBar backgroundColor={themeData === "dark"?backgroundColor:whiteColor} style={themeData === "light"?'light':"dark"}/>
       <NavigationContainer>
         <StackNavigation />
       </NavigationContainer>
+
     </>
+    </ThemeContext.Provider>
   );
 }

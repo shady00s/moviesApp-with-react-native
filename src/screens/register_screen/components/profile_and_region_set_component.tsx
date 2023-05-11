@@ -16,10 +16,12 @@ import {
   whiteColor,
   yellowColor,
 } from "../../../constants";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import globalStyle from "../../components/global_styles";
 import  * as Location  from 'expo-location';
 import { CountryCode } from "react-native-country-picker-modal";
+import MainViewComponent from "../../components/main_view_component";
+import ThemeContext from "../../../context/theme_context";
 interface IuserData{
     preventAdult: boolean,
     themeIsDark:boolean,
@@ -51,8 +53,16 @@ export default function ProfileAndRegionSetComponent() {
   
     }
    }
+   const {themeData,setThemeData} = useContext(ThemeContext)
+   function handleLightTheme(){
+      setThemeData("light")
+    }
 
+  function handleDarkTheme(){
+    setThemeData("dark")
 
+  }
+    console.log(themeData);
   useEffect(()=>{getLocationData()},[])
 
   return (
@@ -79,6 +89,7 @@ export default function ProfileAndRegionSetComponent() {
         <View style={style.themeContainer}>
           <TouchableOpacity
             onPress={() => {
+              handleLightTheme()
                 setUserData((prev)=>({...prev,themeIsDark:false}));
             }}
           >
@@ -150,6 +161,7 @@ export default function ProfileAndRegionSetComponent() {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
+              handleDarkTheme()
                 setUserData((prev)=>({...prev,themeIsDark:true}));
             }}
           >
@@ -231,6 +243,7 @@ export default function ProfileAndRegionSetComponent() {
    
     
       </View>
+      
     </>
   );
 }
