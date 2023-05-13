@@ -1,11 +1,13 @@
 import { View,Text, FlatList } from "react-native"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { StyleSheet } from "react-native"
 import axiosInstance from "../../../instance"
 import IntroSelectMovies from "../../components/intro_select_movies"
-import {  lightGrayColor, subBackGround, whiteColor, yellowColor } from "../../../constants"
+import {  darkYellowColor, lightGrayColor, lightSubbackground, lightbackground, subBackGround, whiteColor, yellowColor } from "../../../constants"
 import StepperNavButton from "../../components/stepper/stepper_nav_button"
 import { TouchableOpacity } from "react-native-gesture-handler"
+import ThemeContext from "../../../context/theme_context"
+import { subTextLightColorStyle, textLightColorStyle } from "../global_styles"
 
 const SetFavoriteMoviesComponent:React.FC = ()=>{
     const [movies,setMovies] = useState([
@@ -20,6 +22,8 @@ const SetFavoriteMoviesComponent:React.FC = ()=>{
     
     ])
     const [selectedMovies,setSelectedMovies] = useState(new Set([]))
+    const {themeData} = useContext(ThemeContext)
+
     const getMoviesData = async ()=>{
         
         await axiosInstance.get('/getIntroSelectMovies').then(data=>{
@@ -49,8 +53,8 @@ const SetFavoriteMoviesComponent:React.FC = ()=>{
     },[])
     return(
             <View style={style.main}>
-                <Text style={style.title}>Select your favorite movies</Text>
-                <Text style={style.subTitle}>you need to select at least 4 movies</Text>
+                <Text style={[style.title,themeData === "light"? textLightColorStyle:{}]}>Select your favorite movies</Text>
+                <Text style={[style.subTitle,themeData === "light"? subTextLightColorStyle:{}]}>you need to select at least 4 movies</Text>
                    
                 <View style={style.image_container}>
                     <FlatList 
@@ -59,9 +63,9 @@ const SetFavoriteMoviesComponent:React.FC = ()=>{
                 </View>
                  {/* categories container */}
                  <View >
-                        <Text style={style.title}>You love</Text>
+                        <Text style={[style.title,themeData === "light"? textLightColorStyle:{}]}>You love</Text>
                         <View style={style.selectedMoviesContainer}>
-                        {[...selectedMovies].map((data:any,index)=> <TouchableOpacity key={index} onPress={()=>{removeSelectedMoviesHandler(data)}} style={{borderRadius:21}}><Text style={style.category} >{data.category}</Text></TouchableOpacity>)}
+                        {[...selectedMovies].map((data:any,index)=> <TouchableOpacity key={index} onPress={()=>{removeSelectedMoviesHandler(data)}} style={{borderRadius:21}}><Text style={[style.category,themeData === "light"?{backgroundColor:lightbackground,color:darkYellowColor}:{}]} >{data.category}</Text></TouchableOpacity>)}
 
                         </View>
 

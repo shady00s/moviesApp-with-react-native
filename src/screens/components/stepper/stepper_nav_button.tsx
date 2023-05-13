@@ -1,8 +1,10 @@
 import { View, TouchableOpacity, Text, StyleSheet, Dimensions } from "react-native";
-import { subBackGround, yellowColor } from "../../../constants";
+import { darkYellowColor, subBackGround, yellowColor } from "../../../constants";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import StepperPaginationContext from "./context/stepper_pagination_context";
+import ThemeContext from "../../../context/theme_context";
+import { textLightColorStyle } from './../../register_screen/global_styles';
 
 
 
@@ -10,6 +12,7 @@ import StepperPaginationContext from "./context/stepper_pagination_context";
 const StepperNavButton: React.FC<IstepperNavButton> = (props) => {
   const { page, setPage } = useContext(StepperPaginationContext)
   const [showError, setShowError] = useState(!props.navToNextPage)
+  const {themeData} = useContext(ThemeContext)
   useEffect(() => {
     if (showError) {
       setTimeout(() => {
@@ -50,7 +53,7 @@ const StepperNavButton: React.FC<IstepperNavButton> = (props) => {
             <View style={style.nextButton}>
               <Ionicons color={"rgba(142,142,142,0.8)"} name="arrow-back-outline" />
 
-              <Text style={style.prevButton}>Prev</Text>
+              <Text style={{...style.prevButton}}>Prev</Text>
             </View>
           </TouchableOpacity>
 
@@ -60,7 +63,7 @@ const StepperNavButton: React.FC<IstepperNavButton> = (props) => {
               {showError ? <View style={style.errorContainer}><Text
                 style={style.errorText}
               >You need to complete the required data to continue</Text></View> :
-               <><Text style={style.nextText}>Next</Text>
+               <><Text style={{...style.nextText,color:themeData==="dark"?yellowColor:darkYellowColor}}>Next</Text>
                <Ionicons color={yellowColor} name="arrow-forward-outline" /></>
                      
 }
@@ -77,7 +80,7 @@ const StepperNavButton: React.FC<IstepperNavButton> = (props) => {
             {showError ? <View style={style.errorContainer}><Text
                 style={style.errorText}
               >You need to complete the required data to continue</Text></View> :
-               <><Text style={style.nextText}>Next</Text>
+               <><Text style={{...style.nextText,color:themeData==="dark"?yellowColor:darkYellowColor}}>Next</Text>
             <Ionicons color={yellowColor} size={16} name="arrow-forward-outline" />
             </>
     
@@ -103,14 +106,13 @@ const style = StyleSheet.create({
     alignItems: "center"
   },
   nextContainer: {
-    height:"100%",
+    height:"auto",
     width: "90%",
     padding: 12,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "flex-end"
   },
   nextText: {
-    color: yellowColor,
     fontFamily: "medium",
     paddingRight: 7
   },

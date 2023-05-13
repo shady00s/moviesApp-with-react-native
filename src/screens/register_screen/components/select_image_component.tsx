@@ -1,13 +1,18 @@
 
 import * as ImagePicker from 'expo-image-picker';
-import React,{ useState } from 'react';
+import React,{ useContext, useState } from 'react';
 import { View ,Modal,Image,Text,TouchableOpacity,TouchableWithoutFeedback,StyleSheet} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { subBackGround, whiteColor } from '../../../constants';
-
-export const SelectImageComponent:React.FC =()=>{
+import ThemeContext from '../../../context/theme_context';
+import { textLightColorStyle } from '../global_styles';
+interface IimageComponent{
+    getImageData:(data:string)=>void
+}
+export const SelectImageComponent:React.FC<IimageComponent> =(props)=>{
     const [image, setImage] = useState(null)
     const [openModel, setOpenModal] = useState(false)
+    const {themeData} = useContext(ThemeContext)
     async function chooseImage() {
         let res = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -18,6 +23,7 @@ export const SelectImageComponent:React.FC =()=>{
         });
         if (!res.canceled) {
             setImage(res.assets[0].uri)
+            props.getImageData(res.assets[0].uri)
         }
     }
 
@@ -30,6 +36,7 @@ export const SelectImageComponent:React.FC =()=>{
         })
         if (!res.canceled) {
             setImage(res.assets[0].uri)
+            props.getImageData(res.assets[0].uri)
         }
     }
     return(<>
@@ -37,7 +44,7 @@ export const SelectImageComponent:React.FC =()=>{
                     {!image ? <Ionicons size={45} style={style.emptyImage} name="image-outline" /> : <Image style={style.profileImage} source={{ uri: image }} />
                     }
                       <TouchableOpacity onPress={()=>{setOpenModal(true)}}>
-                                <Text style={style.regText}>{!image?"Add photo":"Change photo"}</Text>
+                                <Text style={[style.regText,themeData === "light"? textLightColorStyle:{}]}>{!image?"Add photo":"Change photo"}</Text>
                             </TouchableOpacity>
                     <Modal
                     visible={openModel}
@@ -107,6 +114,9 @@ const style = StyleSheet.create({
         backgroundColor:whiteColor,
         borderTopLeftRadius:30,
         borderTopRightRadius:30,
+        elevation:20,
+        shadowColor: '#272627',
+
     },
     imageButton:{
         padding:10,

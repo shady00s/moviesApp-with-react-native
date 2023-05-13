@@ -1,6 +1,7 @@
 import { StyleSheet, SafeAreaView, View, Text, Platform, StatusBar } from "react-native";
 import React, {
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -8,6 +9,9 @@ import React, {
 } from "react";
 import {
   backgroundColor,
+  darkGrayColor,
+  darkYellowColor,
+  lightbackground,
   subBackGround,
   whiteColor,
   yellowColor,
@@ -17,6 +21,7 @@ import { Dimensions } from "react-native";
 import StepperPaginationContext from "./context/stepper_pagination_context";
 import { Animated } from "react-native";
 import MainViewComponent from "../main_view_component";
+import ThemeContext from "../../../context/theme_context";
 
 
 
@@ -57,33 +62,33 @@ const Stepper: React.FC<stepperModel> = (props) => {
   const scrollWidth = (100 / props.screens.length)
   const [page, setPage] = useState<Ipagination>({ screensNumber: props.screens.length, currentIndex: 0 })
   const paginationValue = useMemo(() => ({ page, setPage }), [page])
- 
+  const { themeData } = useContext(ThemeContext)
   const [stepperColor, setStepperColor] = useState<IstepperColor[]>([])
 
-  const stepperColorInitFunction = ()=>{
+  const stepperColorInitFunction = () => {
     const stepperStack = []
     for (let index = 0; index < props.screens.length; index++) {
-      index == 0 ? stepperStack[index] = { backGroundColor: yellowColor, color: "black", index: index } : stepperStack[index] = { backGroundColor: subBackGround, color: yellowColor, index: index }
+      index == 0 ? stepperStack[index] = { backGroundColor: themeData === "dark" ? yellowColor : darkYellowColor, color: "black", index: index } : stepperStack[index] = { backGroundColor: themeData === "dark" ? subBackGround : lightbackground, color: themeData === "dark" ? yellowColor : subBackGround, index: index }
 
     }
-    setStepperColor(()=>stepperStack)
+    setStepperColor(() => stepperStack)
   }
 
-  const stepperColorChangeHandler =useCallback((targetIndex:number)=>{
+  const stepperColorChangeHandler = useCallback((targetIndex: number) => {
     const oldStepperStack = [...stepperColor]
     for (let index = 0; index < oldStepperStack.length; index++) {
-      if (targetIndex < index){
-        oldStepperStack[index].backGroundColor = subBackGround
-        oldStepperStack[index].color = yellowColor
-      }else{
-        oldStepperStack[index].backGroundColor = yellowColor
-        oldStepperStack[index].color = subBackGround
+      if (targetIndex < index) {
+        oldStepperStack[index].backGroundColor = themeData === "dark" ? subBackGround : lightbackground
+        oldStepperStack[index].color = themeData === "dark" ? yellowColor : subBackGround
+      } else {
+        oldStepperStack[index].backGroundColor = themeData === "dark" ? yellowColor : darkYellowColor
+        oldStepperStack[index].color = themeData === "dark" ? subBackGround : whiteColor
 
       }
-        
+
     }
-    setStepperColor(()=>oldStepperStack)
-  },[page.currentIndex])
+    setStepperColor(() => oldStepperStack)
+  }, [page.currentIndex, themeData])
 
 
 
@@ -109,23 +114,23 @@ const Stepper: React.FC<stepperModel> = (props) => {
 
   }, [page.currentIndex])
 
-  useEffect(()=>{
-    if(stepperColor.length === 0 ){
+  useEffect(() => {
+    if (stepperColor.length === 0) {
       stepperColorInitFunction()
     }
-  },[stepperColor])
+  }, [stepperColor])
 
   useEffect(() => {
     stepperColorChangeHandler(page.currentIndex)
 
     changeIndexByNavButtons()
-  }, [page.currentIndex])
+  }, [page.currentIndex, themeData])
   return (
     <>
       <SafeAreaView style={{ paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 }}>
-          <StepperPaginationContext.Provider value={paginationValue}>
-        <MainViewComponent style={style.mainContianer}>
-          {/* indexContainer */}
+        <StepperPaginationContext.Provider value={paginationValue}>
+          <MainViewComponent style={style.mainContianer}>
+            {/* indexContainer */}
             <View style={style.indexContainer}>
               {/* index design */}
               {props.screens.map((screenData, index) => (
@@ -211,8 +216,8 @@ const Stepper: React.FC<stepperModel> = (props) => {
 
 
             </View>
-        </MainViewComponent>
-          </StepperPaginationContext.Provider>
+          </MainViewComponent>
+        </StepperPaginationContext.Provider>
 
       </SafeAreaView>
     </>

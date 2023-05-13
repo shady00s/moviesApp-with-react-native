@@ -7,7 +7,7 @@ import {
   Dimensions,
   SwitchChangeEvent,
 } from "react-native";
-import DropdownComponent from "../../components/Dropdown_component";
+import DropdownComponent from "../../components/Dropdown_country_component";
 import StepperNavButton from "../../components/stepper/stepper_nav_button";
 import {
   backgroundColor,
@@ -16,12 +16,12 @@ import {
   whiteColor,
   yellowColor,
 } from "../../../constants";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import globalStyle from "../../components/global_styles";
 import  * as Location  from 'expo-location';
 import { CountryCode } from "react-native-country-picker-modal";
-import MainViewComponent from "../../components/main_view_component";
 import ThemeContext from "../../../context/theme_context";
+import { subTextLightColorStyle, textLightColorStyle } from "../global_styles";
 interface IuserData{
     preventAdult: boolean,
     themeIsDark:boolean,
@@ -54,29 +54,28 @@ export default function ProfileAndRegionSetComponent() {
     }
    }
    const {themeData,setThemeData} = useContext(ThemeContext)
-   function handleLightTheme(){
+   const handleLightTheme = useCallback(()=>{
       setThemeData("light")
-    }
+    },[])
 
-  function handleDarkTheme(){
+  const  handleDarkTheme= useCallback(()=>{
     setThemeData("dark")
 
-  }
-    console.log(themeData);
+  },[])
   useEffect(()=>{getLocationData()},[])
 
   return (
     <>
       <View style={style.main}>
-        <Text style={globalStyle.title}>Profile settings</Text>
-        <Text style={{ ...globalStyle.smallerTitle, padding: 12 }}>Region</Text>
+        <Text style={[globalStyle.title,themeData === "light"?{...textLightColorStyle}:{}]}>Profile settings</Text>
+        <Text style={[{ ...globalStyle.smallerTitle, padding: 12 },themeData === "light"?{...textLightColorStyle}:{}]}>Region</Text>
 
         <DropdownComponent countryCode={userData.region}/>
         {/* prevent audlt content */}
         <View style={style.switchContainer}>
             <View style={{padding:6,width:"80%"}}>
-                  <Text style={globalStyle.text}>Don't allow for audlt content</Text>
-                  <Text style={globalStyle.subTitle}>This option is activated by default,it prevents to show audlt content</Text>
+                  <Text style={[{...globalStyle.text},themeData === "light"?{...textLightColorStyle}:{}]}>Don't allow for audlt content</Text>
+                  <Text style={[{...globalStyle.subTitle},themeData === "light"?{...subTextLightColorStyle}:{}]}>This option is activated by default,it prevents to show audlt content</Text>
             </View>
           <Switch  value={userData.preventAdult} onValueChange={(val)=>{
             setUserData((prev)=>({...prev,preventAdult:val}))
@@ -84,8 +83,8 @@ export default function ProfileAndRegionSetComponent() {
         </View>
         {/* Dark mode */}
 
-        <Text style={globalStyle.smallerTitle}>Choose Theme</Text>
-        <Text style={globalStyle.subTitle}>You can change it at anytime.</Text>
+        <Text style={[{...globalStyle.smallerTitle},themeData === "light"?{...textLightColorStyle}:{}]}>Choose Theme</Text>
+        <Text style={[globalStyle.subTitle,themeData === "light"?{...subTextLightColorStyle}:{}]}>You can change it at anytime.</Text>
         <View style={style.themeContainer}>
           <TouchableOpacity
             onPress={() => {

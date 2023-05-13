@@ -45,7 +45,7 @@ export default function App() {
   return (
    <ThemeContext.Provider value={themeDataValue}>
      <>
-     <StatusBar backgroundColor={themeData === "dark"?backgroundColor:whiteColor} style={themeData === "light"?'light':"dark"}/>
+     <StatusBar backgroundColor={themeData === "dark"?backgroundColor:whiteColor} style={themeData !== "light"?'light':"dark"}/>
       <NavigationContainer>
         <StackNavigation />
       </NavigationContainer>

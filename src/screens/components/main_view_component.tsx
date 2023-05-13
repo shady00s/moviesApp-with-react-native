@@ -5,9 +5,11 @@ import { backgroundColor, whiteColor } from "../../constants";
 
 interface ImainView {
   children: ReactNode;
-    style:Object
+    style:Object;
+    newwhiteColor?:string;
+    newBlackColor?:string
 }
-export default function MainViewComponent({ children,style }: ImainView) {
+export default function MainViewComponent({ children,style,newwhiteColor,newBlackColor }: ImainView) {
   const { themeData,setThemeData } = useContext(ThemeContext);
 
   const animation = useRef(new Animated.Value(0)).current;
@@ -15,11 +17,11 @@ export default function MainViewComponent({ children,style }: ImainView) {
   useEffect(()=>{
         Animated.timing(animation, {
             useNativeDriver: false,
-            duration: 200,
+            duration: 100,
             toValue: themeData === "light"?0:1,
           }).start(()=>{ Animated.timing(animation, {
             useNativeDriver: false,
-            duration: 200,
+            duration: 100,
             toValue: themeData === "light"?1:0,
           }).start();});
 
@@ -28,7 +30,7 @@ export default function MainViewComponent({ children,style }: ImainView) {
   
   const themeAnimation = animation.interpolate({
      inputRange:[0,1],
-     outputRange:[backgroundColor,whiteColor]
+     outputRange:[newBlackColor?newBlackColor:backgroundColor,newwhiteColor ? newwhiteColor : whiteColor]
   })
 
  

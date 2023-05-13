@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { TextInput, View, StyleSheet, TouchableOpacity } from "react-native";
-import { subBackGround, whiteColor } from "../../constants";
+import { backgroundColor, darkGrayColor, lightGrayColor, lightSubbackground, lightbackground, subBackGround, whiteColor } from "../../constants";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import MainViewComponent from "./main_view_component";
+import ThemeContext from "../../context/theme_context";
+import { textLightColorStyle } from "../register_screen/global_styles";
 interface IinputText {
   placeholder: string;
   onChange: (data: string) => void;
@@ -11,13 +14,15 @@ interface IinputText {
 
 const InputTextComponent: React.FC<IinputText> = (props) => {
   const [showPass,setShowPass] = useState(props.isPassword)
+
+  const {themeData} = useContext(ThemeContext)
   function handlePasswordVisibility(){
       setShowPass(!showPass)
   }
   return (
-    <View style={style.mainContainer}>
+    <MainViewComponent newwhiteColor={lightbackground} newBlackColor={subBackGround} style={style.mainContainer}>
       <Ionicons
-        style={{ color: whiteColor, padding: 4, marginRight: 8 }}
+        style={{ color:themeData !== "light"? whiteColor:darkGrayColor, padding: 4, marginRight: 8 }}
         name={"pencil-outline"}
       />
       <TextInput
@@ -25,13 +30,14 @@ const InputTextComponent: React.FC<IinputText> = (props) => {
       autoCapitalize="none"
       secureTextEntry={showPass}
         onChangeText={props.onChange}
-        style={style.textInput}
-        placeholderTextColor={whiteColor}
+        style={[style.textInput,themeData === "light"? textLightColorStyle:{}]}
+        placeholderTextColor={themeData === "light"? backgroundColor:whiteColor}
         placeholder={props.placeholder}
+        
       />
       {props.isPassword? <TouchableOpacity onPress={handlePasswordVisibility}><Ionicons size={21} style={{ color: whiteColor, padding: 4, marginRight: 8 }}
       name={showPass?"eye-outline":"eye-off-outline"}/></TouchableOpacity>:null}
-    </View>
+    </MainViewComponent>
     
   );
 };
@@ -44,12 +50,12 @@ const style = StyleSheet.create({
     width: "90%",
     padding: 8,
     borderRadius: 12,
-    backgroundColor: subBackGround,
   },
   textInput: {
     padding:4,
     flex:1,
-    color: whiteColor,
+    fontFamily:"medium",
+    color:whiteColor
   },
 });  
 

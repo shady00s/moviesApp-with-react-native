@@ -10,10 +10,10 @@ import {
   ScrollView,
   Dimensions,
   Platform,
-  Animated,KeyboardAvoidingView,
+  Animated, KeyboardAvoidingView,
   Easing,
 } from "react-native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import {
   backgroundColor,
   subBackGround,
@@ -29,18 +29,38 @@ import PasswordCheckerComponent from "../../components/password_checker/password
 import StepperNavButton from "../../components/stepper/stepper_nav_button";
 import ErrorTextComponent from "../../components/error_text_component";
 import globalStyle from "../../components/global_styles";
+import ThemeContext from "../../../context/theme_context";
+import { subTextLightColorStyle, textLightColorStyle } from "../global_styles";
 const height = Dimensions.get("screen").height;
 
 
-interface IinputError{
-  name:boolean;
-  password:boolean;
-  email:boolean;
-  confirmPassword:boolean
+interface IinputError {
+  name: boolean;
+  password: boolean;
+  email: boolean;
+  confirmPassword: boolean,
+  noImage: boolean
 }
 const UserIformationComponent: React.FC = () => {
   const initAnimation = useRef(new Animated.Value(0)).current;
+  const { themeData } = useContext(ThemeContext)
 
+  const navigation = useNavigation<any>();
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [passwordDetails, setPasswordDetails] = useState(false)
+
+  const [inputError, setInputError] = useState<IinputError>({
+    name: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+    noImage: true
+  });
+
+  const [passToNextPage, setPassToNextPage] = useState(false)
   useEffect(() => {
     Animated.timing(initAnimation, {
       toValue: 1,
@@ -48,134 +68,142 @@ const UserIformationComponent: React.FC = () => {
       useNativeDriver: true,
     }).start();
   }, []);
-  const navigation = useNavigation<any>();
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [passwordDetails,setPasswordDetails] = useState(false)
-  
-  const [inputError, setInputError] = useState<IinputError>({
-    name:false,
-    email:false,
-    password:false,
-    confirmPassword:false
-  });
-  
-  const emailValidationChecker = useCallback(()=>{
-    const emailRegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-      console.log(emailRegExp.test(email));
-    if(!emailRegExp.test(email)){
-      setInputError((prevState)=>({ ...prevState, email: true }));
+  useEffect(() => {
 
-    }else{
-      setInputError((prevState)=>({ ...prevState, email: false }));
+    for (const data in inputError) {
+      if (inputError[data] === false) {
+        setPassToNextPage(true)
+      } else {
+        setPassToNextPage(false)
+      }
+    }
+  }, [inputError])
+  const emailValidationChecker = useCallback(() => {
+    const emailRegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+    console.log(emailRegExp.test(email));
+    if (!emailRegExp.test(email)) {
+      setInputError((prevState) => ({ ...prevState, email: true }));
+
+    } else {
+      setInputError((prevState) => ({ ...prevState, email: false }));
 
     }
-  },[email])
+  }, [email])
   const confirmPasswordChecker = useCallback(() => {
     if (confirmPassword !== password) {
-      setInputError((prevState)=>({ ...prevState, confirmPassword: true }));
+      setInputError((prevState) => ({ ...prevState, confirmPassword: true }));
     } else {
-      setInputError((prevState)=>({ ...prevState, confirmPassword: false }));
+      setInputError((prevState) => ({ ...prevState, confirmPassword: false }));
     }
-  },[confirmPassword]);
+  }, [confirmPassword]);
 
 
-  const nameValidationChecker = useCallback(()=>{
+  const nameValidationChecker = useCallback(() => {
     // check for name and surname that every name length can be at least 2 and contain only *'* and *-*
     const nameRegExp = /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/
-    if(name.length === 0){
-      setInputError((prevState)=>({ ...prevState, name: true }));
+    if (name.length === 0) {
+      setInputError((prevState) => ({ ...prevState, name: true }));
 
     }
-    else if (!nameRegExp.test(name)){
-      setInputError((prevState)=>({ ...prevState, name: true }));
+    else if (!nameRegExp.test(name)) {
+      setInputError((prevState) => ({ ...prevState, name: true }));
 
-    }else{
-      setInputError((prevState)=>({ ...prevState, name: false }));
+    } else {
+      setInputError((prevState) => ({ ...prevState, name: false }));
 
     }
-  },[name])
+  }, [name])
   return (
-     
-          <KeyboardAwareScrollView contentContainerStyle={{flexGrow:1}}>
+
+    <KeyboardAwareScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <Animated.View style={[style.titleContainer, { opacity: initAnimation }]}>
-        <Text style={globalStyle.title}>Complete your profile</Text>
-        <Text style={globalStyle.subTitle}>
+        <Text style={[globalStyle.title, themeData === "light" ? textLightColorStyle : {}]}>Complete your profile</Text>
+        <Text style={[globalStyle.subTitle, themeData === "light" ? subTextLightColorStyle : {}]}>
           Add image for you, your name and set password for your profile.
         </Text>
       </Animated.View>
-          {/* image picker */}
-          <Animated.View
-            style={{justifyContent:"center", opacity: initAnimation }}
-          >
-            <SelectImageComponent />
-          </Animated.View>
-          {/* input container */}
-        
-          <Animated.View
-            style={{ opacity: initAnimation }}
-          >
-            <InputTextComponent onChange={(data) => {setName(data) } } placeholder="Name" onBlur={()=>{nameValidationChecker()}} />
-            <View style={{height:inputError.name?
-              "auto":0}}>
-              <ErrorTextComponent error={name.length === 0 ?"Please type your name":"please check your name and the only allowed characters are ' _" }color="red" icon={"close-outline"}/>
-            </View>
-            <InputTextComponent
-            onBlur={()=>{emailValidationChecker()}}
-              onChange={(data) => {
-                setEmail(data);
-              }}
-              placeholder="Email"
-            />
-            <View style={{height:inputError.email?
-              "auto":0}}>
-              <ErrorTextComponent error="Please check your email address" color="red" icon={"close-outline"}/>
-            </View>
-            <InputTextComponent
-            onBlur={()=>{setPasswordDetails(true)}}
-              onChange={(data) => {
-                setPassword(data);
-              }}
-              placeholder="Password"
-              isPassword
-            />
-            <PasswordCheckerComponent password={password} showDetails={passwordDetails} />
-            <InputTextComponent
-            onBlur={()=>{confirmPasswordChecker()}}
-              isPassword
-              onChange={(data) => {setConfirmPassword(data)}}
-              placeholder="Confirm password"
-            />
-            <View style={{height:inputError.confirmPassword?
-              "auto":0}}>
-              <ErrorTextComponent error="Please check your email address" color="red" icon={"close-outline"}/>
-            </View>
-        
-            <View style={style.registerContainer}>
-              <Text style={style.regText}>Already have account?</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("login");
-                }}
-              >
-                <Text style={style.regButton}>Login</Text>
-              </TouchableOpacity>
-              
-              
-            </View>
-            
-         
- 
-          </Animated.View>
-        
-          <View style={{height:92,width:"100%",alignItems:"flex-start", justifyContent:"flex-start"}}>
+      {/* image picker */}
+      <Animated.View
+        style={{ justifyContent: "center", opacity: initAnimation }}
+      >
+        <SelectImageComponent getImageData={function (data: string): void {
+          setInputError((prevState)=>({...prevState,noImage:false}))
+        } } />
+      </Animated.View>
+      {/* input container */}
 
-<StepperNavButton isMiddle={false} navToNextPage={true} screensNumber={4}/>
-</View>
-       
-        </KeyboardAwareScrollView>
+      <Animated.View
+        style={{ opacity: initAnimation }}
+      >
+        <InputTextComponent onChange={(data) => { setName(data) }} placeholder="Name" onBlur={() => { nameValidationChecker() }} />
+        <View style={{
+          height: inputError.name ?
+            "auto" : 0
+        }}>
+          <ErrorTextComponent error={name.length === 0 ? "Please type your name" : "please check your name and the only allowed characters are ' _"} color="red" icon={"close-outline"} />
+        </View>
+        <InputTextComponent
+          onBlur={() => { emailValidationChecker() }}
+          onChange={(data) => {
+            setEmail(data);
+          }}
+          placeholder="Email"
+        />
+        <View style={{
+          height: inputError.email ?
+            "auto" : 0
+        }}>
+          <ErrorTextComponent error="Please check your email address" color="red" icon={"close-outline"} />
+        </View>
+        <InputTextComponent
+          onBlur={() => { setPasswordDetails(true) }}
+          onChange={(data) => {
+            setPassword(data);
+          }}
+          placeholder="Password"
+          isPassword
+        />
+        <PasswordCheckerComponent password={password} showDetails={passwordDetails} />
+        <InputTextComponent
+          onBlur={() => { confirmPasswordChecker() }}
+          isPassword
+          onChange={(data) => { setConfirmPassword(data) }}
+          placeholder="Confirm password"
+        />
+        <View style={{
+          height: inputError.confirmPassword ?
+            "auto" : 0
+        }}>
+          <ErrorTextComponent error="Please check your email address" color="red" icon={"close-outline"} />
+        </View>
+        <View>
+          <View style={style.registerContainer}>
+            <Text style={[style.regText, themeData === "light" ? textLightColorStyle : {}]}>Already have account?</Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("login");
+              }}
+            >
+              <Text style={style.regButton}>Login</Text>
+            </TouchableOpacity>
+
+
+          </View>
+
+        </View>
+
+
+
+        <StepperNavButton isMiddle={false} navToNextPage={passToNextPage} screensNumber={4} />
+
+      </Animated.View>
+
+
+
+    </KeyboardAwareScrollView>
+
+
+
 
   );
 };
@@ -184,8 +212,8 @@ export default React.memo(UserIformationComponent);
 
 const style = StyleSheet.create({
   titleContainer: {
-      paddingHorizontal:21,
-      paddingVertical:18,
+    paddingHorizontal: 21,
+    paddingVertical: 18,
     justifyContent: "flex-end",
   },
 
@@ -195,19 +223,17 @@ const style = StyleSheet.create({
     color: whiteColor,
   },
   registerContainer: {
-    alignItems:"flex-start",
-    justifyContent:"center",
-    marginLeft:3,
-    paddingTop: 9,
-    paddingLeft:7,
-    paddingRight:4,
+    alignItems: "center",
+    justifyContent: "center",
+
+    paddingRight: 4,
     flexDirection: "row",
     width: "80%",
-   height:Dimensions.get("screen").height* 0.12
+    height: 41
 
   },
   regText: {
-    marginLeft:3,
+    marginLeft: 3,
     paddingRight: 4,
     color: whiteColor,
     fontFamily: "medium",
@@ -217,5 +243,5 @@ const style = StyleSheet.create({
     color: yellowColor,
   },
 
-  
+
 });
