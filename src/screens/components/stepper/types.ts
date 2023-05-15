@@ -10,7 +10,8 @@ interface screenInterface {
   interface IstepperNavButton {
     isMiddle: boolean;
     navToNextPage:boolean;
-    screensNumber:number
+    screensNumber:number;
+    onNext:()=>void | null
   
   }
 

@@ -74,6 +74,7 @@ const Stepper: React.FC<stepperModel> = (props) => {
     setStepperColor(() => stepperStack)
   }
 
+  
   const stepperColorChangeHandler = useCallback((targetIndex: number) => {
     const oldStepperStack = [...stepperColor]
     for (let index = 0; index < oldStepperStack.length; index++) {

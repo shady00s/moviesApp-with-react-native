@@ -1,5 +1,5 @@
 import { View,Text, FlatList } from "react-native"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useCallback, useContext, useEffect, useState } from "react"
 import { StyleSheet } from "react-native"
 import axiosInstance from "../../../instance"
 import IntroSelectMovies from "../../components/intro_select_movies"
@@ -10,26 +10,15 @@ import ThemeContext from "../../../context/theme_context"
 import { subTextLightColorStyle, textLightColorStyle } from "../global_styles"
 
 const SetFavoriteMoviesComponent:React.FC = ()=>{
-    const [movies,setMovies] = useState([
-        {title:"test",poster_path:"https://image.tmdb.org/t/p/w500/p60VSQL7usdxztIGokJPpHmKWdU.jpg",category:"Action"},
-        {title:"test",poster_path:"https://image.tmdb.org/t/p/w500/p60VSQL7usdxztIGokJPpHmKWdU.jpg",category:"Romantic"},
-        {title:"test",poster_path:"https://image.tmdb.org/t/p/w500/p60VSQL7usdxztIGokJPpHmKWdU.jpg",category:"Adventure"},
-        {title:"test",poster_path:"https://image.tmdb.org/t/p/w500/p60VSQL7usdxztIGokJPpHmKWdU.jpg",category:"Drama"},
-        {title:"test",poster_path:"https://image.tmdb.org/t/p/w500/p60VSQL7usdxztIGokJPpHmKWdU.jpg",category:"Horror"},
-        {title:"test",poster_path:"https://image.tmdb.org/t/p/w500/p60VSQL7usdxztIGokJPpHmKWdU.jpg",category:"Family"},
-        {title:"test",poster_path:"https://image.tmdb.org/t/p/w500/p60VSQL7usdxztIGokJPpHmKWdU.jpg",category:"Animation"},
-        {title:"test",poster_path:"https://image.tmdb.org/t/p/w500/p60VSQL7usdxztIGokJPpHmKWdU.jpg",category:"Kids"},
-    
-    ])
+    const [movies,setMovies] = useState([])
     const [selectedMovies,setSelectedMovies] = useState(new Set([]))
     const {themeData} = useContext(ThemeContext)
-
-    const getMoviesData = async ()=>{
+    const getMoviesData = useCallback( async ()=>{
         
         await axiosInstance.get('/getIntroSelectMovies').then(data=>{
             setMovies(data.data.data)
         }).catch(err=>{console.log(err);})
-    }
+    },[])
 
     function selectedMoviesHandler(movieData){
         let newSelectedMovies = selectedMovies;
@@ -49,7 +38,7 @@ const SetFavoriteMoviesComponent:React.FC = ()=>{
         }
     }
     useEffect(()=>{
-      //  getMoviesData()
+     getMoviesData()
     },[])
     return(
             <View style={style.main}>
@@ -71,7 +60,9 @@ const SetFavoriteMoviesComponent:React.FC = ()=>{
 
                      </View>
                 <View style={{height:"15%"}}>
-                  <StepperNavButton screensNumber={4} navToNextPage={true} isMiddle={true} />
+                  <StepperNavButton screensNumber={4} navToNextPage={true} isMiddle={true} onNext={function (): void {
+                    
+                } } />
 
                   </View>
             </View>

@@ -176,4 +176,4 @@ const style = StyleSheet.create({
   },
 });
 
-export default PasswordCheckerComponent
+export default React.memo(PasswordCheckerComponent)

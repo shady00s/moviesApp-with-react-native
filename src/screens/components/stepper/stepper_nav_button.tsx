@@ -11,7 +11,7 @@ import { textLightColorStyle } from './../../register_screen/global_styles';
 
 const StepperNavButton: React.FC<IstepperNavButton> = (props) => {
   const { page, setPage } = useContext(StepperPaginationContext)
-  const [showError, setShowError] = useState(!props.navToNextPage)
+  const [showError, setShowError] = useState(false)
   const {themeData} = useContext(ThemeContext)
   useEffect(() => {
     if (showError) {
@@ -35,7 +35,7 @@ const StepperNavButton: React.FC<IstepperNavButton> = (props) => {
       setShowError(true)
     }
 
-  }, [page.currentIndex])
+  }, [page.currentIndex,props.navToNextPage])
   const handlePrevPage = useCallback(() => {
     if (page.currentIndex > 0) {
       let newIndex = page.currentIndex - 1
@@ -58,7 +58,10 @@ const StepperNavButton: React.FC<IstepperNavButton> = (props) => {
           </TouchableOpacity>
 
 
-          <TouchableOpacity onPress={() => { handleNextPage() }}>
+          <TouchableOpacity onPress={() => {
+             handleNextPage()  
+             props.onNext()
+             }}>
             <View style={style.nextButton}>
               {showError ? <View style={style.errorContainer}><Text
                 style={style.errorText}
@@ -75,8 +78,11 @@ const StepperNavButton: React.FC<IstepperNavButton> = (props) => {
 
       ) : (
         <View style={style.nextContainer}>
-          <TouchableOpacity  onPress={() => { handleNextPage() }}>
-            <View style={style.nextButton}>
+          <TouchableOpacity  onPress={() => { 
+            handleNextPage() 
+            props?.onNext()
+            }}>
+            <View style={{...style.nextButton,height:Dimensions.get("screen").height *0.1}}>
             {showError ? <View style={style.errorContainer}><Text
                 style={style.errorText}
               >You need to complete the required data to continue</Text></View> :
@@ -99,14 +105,14 @@ const StepperNavButton: React.FC<IstepperNavButton> = (props) => {
 const style = StyleSheet.create({
   nextPrevContainer: {
     width: "90%",
-
+    height:"100%",
     padding: 12,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center"
   },
   nextContainer: {
-    height:"auto",
+   height:"100%",
     width: "90%",
     padding: 12,
     justifyContent: "flex-start",
@@ -117,11 +123,14 @@ const style = StyleSheet.create({
     paddingRight: 7
   },
   nextButton: {
+    width:"auto",
+    height:"100%",
     paddingHorizontal: 12,
     paddingVertical: 8,
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+
   },
   prevButton: {
     color: "rgba(142,142,142,0.8)",

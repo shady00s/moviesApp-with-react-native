@@ -23,13 +23,11 @@ import { CountryCode } from "react-native-country-picker-modal";
 import ThemeContext from "../../../context/theme_context";
 import { subTextLightColorStyle, textLightColorStyle } from "../global_styles";
 interface IuserData{
-    preventAdult: boolean,
     themeIsDark:boolean,
     region:CountryCode
 }
 export default function ProfileAndRegionSetComponent() {
   const [userData, setUserData] = useState<IuserData>({
-    preventAdult:true,
     themeIsDark:true,
     region:"EG"
 });
@@ -77,9 +75,7 @@ export default function ProfileAndRegionSetComponent() {
                   <Text style={[{...globalStyle.text},themeData === "light"?{...textLightColorStyle}:{}]}>Don't allow for audlt content</Text>
                   <Text style={[{...globalStyle.subTitle},themeData === "light"?{...subTextLightColorStyle}:{}]}>This option is activated by default,it prevents to show audlt content</Text>
             </View>
-          <Switch  value={userData.preventAdult} onValueChange={(val)=>{
-            setUserData((prev)=>({...prev,preventAdult:val}))
-          }}/>
+          <Switch value={true}/>
         </View>
         {/* Dark mode */}
 
@@ -232,13 +228,16 @@ export default function ProfileAndRegionSetComponent() {
             </View>
           </TouchableOpacity>
         </View>
-       
-        <StepperNavButton
+       <View style={{flex:0.4}}>
+       <StepperNavButton
           navToNextPage={true}
           isMiddle={true}
-        
-          screensNumber={4}
-        />
+
+          screensNumber={4} onNext={function (): void {
+           
+          } }        />
+       </View>
+       
    
     
       </View>
@@ -260,7 +259,7 @@ const style = StyleSheet.create({
   },
   themeContainer: {
     flexDirection: "row",
-    flex: 0.8,
+    flex: 1,
 
     justifyContent: "space-evenly",
     alignItems: "center",

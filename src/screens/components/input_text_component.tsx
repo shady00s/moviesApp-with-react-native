@@ -59,4 +59,4 @@ const style = StyleSheet.create({
   },
 });  
 
-export default InputTextComponent;
+export default React.memo(InputTextComponent);

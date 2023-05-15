@@ -31,6 +31,7 @@ import ErrorTextComponent from "../../components/error_text_component";
 import globalStyle from "../../components/global_styles";
 import ThemeContext from "../../../context/theme_context";
 import { subTextLightColorStyle, textLightColorStyle } from "../global_styles";
+import axiosInstance from "../../../instance";
 const height = Dimensions.get("screen").height;
 
 
@@ -38,6 +39,7 @@ interface IinputError {
   name: boolean;
   password: boolean;
   email: boolean;
+  usedEmail: boolean;
   confirmPassword: boolean,
   noImage: boolean
 }
@@ -55,38 +57,37 @@ const UserIformationComponent: React.FC = () => {
   const [inputError, setInputError] = useState<IinputError>({
     name: false,
     email: false,
+    usedEmail: false,
     password: false,
     confirmPassword: false,
     noImage: true
   });
-
   const [passToNextPage, setPassToNextPage] = useState(false)
-  useEffect(() => {
-    Animated.timing(initAnimation, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }, []);
-  useEffect(() => {
 
-    for (const data in inputError) {
-      if (inputError[data] === false) {
-        setPassToNextPage(true)
-      } else {
-        setPassToNextPage(false)
+  const checkForEmailExistance = useCallback(async () => {
+
+  await  axiosInstance.get('/email-existance', {
+      params: {
+        email: email
       }
-    }
-  }, [inputError])
-  const emailValidationChecker = useCallback(() => {
+    }).then(response => {
+
+      if (response.status === 200) {
+        setInputError((prev) => ({ ...prev, usedEmail: false }))
+      }
+    }).catch(err=>{
+      setInputError((prev) => ({ ...prev, usedEmail: true }))
+
+    })
+  }, [email])
+  const emailValidationChecker = useCallback(async () => {
     const emailRegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-    console.log(emailRegExp.test(email));
     if (!emailRegExp.test(email)) {
       setInputError((prevState) => ({ ...prevState, email: true }));
 
     } else {
       setInputError((prevState) => ({ ...prevState, email: false }));
-
+      await checkForEmailExistance()
     }
   }, [email])
   const confirmPasswordChecker = useCallback(() => {
@@ -101,18 +102,31 @@ const UserIformationComponent: React.FC = () => {
   const nameValidationChecker = useCallback(() => {
     // check for name and surname that every name length can be at least 2 and contain only *'* and *-*
     const nameRegExp = /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/
-    if (name.length === 0) {
+    if (name.length === 0 || nameRegExp.test(name)) {
       setInputError((prevState) => ({ ...prevState, name: true }));
 
     }
-    else if (!nameRegExp.test(name)) {
-      setInputError((prevState) => ({ ...prevState, name: true }));
-
-    } else {
+    else {
       setInputError((prevState) => ({ ...prevState, name: false }));
 
     }
   }, [name])
+  useEffect(() => {
+    Animated.timing(initAnimation, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+  useEffect(() => {
+    if (inputError.email === false && inputError.name === false && inputError.noImage === false && inputError.password === false) {
+      setPassToNextPage(true)
+    } else {
+      setPassToNextPage(false)
+     
+    }
+  }, [inputError])
+
   return (
 
     <KeyboardAwareScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -127,8 +141,9 @@ const UserIformationComponent: React.FC = () => {
         style={{ justifyContent: "center", opacity: initAnimation }}
       >
         <SelectImageComponent getImageData={function (data: string): void {
-          setInputError((prevState)=>({...prevState,noImage:false}))
-        } } />
+       
+          setInputError((prevState) => ({ ...prevState, noImage: false }))
+        }} />
       </Animated.View>
       {/* input container */}
 
@@ -143,17 +158,20 @@ const UserIformationComponent: React.FC = () => {
           <ErrorTextComponent error={name.length === 0 ? "Please type your name" : "please check your name and the only allowed characters are ' _"} color="red" icon={"close-outline"} />
         </View>
         <InputTextComponent
-          onBlur={() => { emailValidationChecker() }}
+          onBlur={() => {
+            emailValidationChecker()
+
+          }}
           onChange={(data) => {
             setEmail(data);
           }}
           placeholder="Email"
         />
         <View style={{
-          height: inputError.email ?
+          height: inputError.email || inputError.usedEmail?
             "auto" : 0
         }}>
-          <ErrorTextComponent error="Please check your email address" color="red" icon={"close-outline"} />
+          <ErrorTextComponent error={inputError.usedEmail?"This email is already used": "Please check your email address" }color="red" icon={"close-outline"} />
         </View>
         <InputTextComponent
           onBlur={() => { setPasswordDetails(true) }}
@@ -193,11 +211,22 @@ const UserIformationComponent: React.FC = () => {
         </View>
 
 
-
-        <StepperNavButton isMiddle={false} navToNextPage={passToNextPage} screensNumber={4} />
+     
 
       </Animated.View>
+         
+      <StepperNavButton isMiddle={false} navToNextPage={true} screensNumber={4} onNext={async function (): Promise<void> {
+        console.log(passToNextPage);
+        
+        if(!passToNextPage){
+         await emailValidationChecker()
+          confirmPasswordChecker()
+          setPasswordDetails(()=>true)
+          nameValidationChecker()
+         }
 
+
+        } } />
 
 
     </KeyboardAwareScrollView>

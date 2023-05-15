@@ -1,5 +1,6 @@
 import { View, Image, TouchableOpacity, Dimensions } from "react-native";
 import { StyleSheet } from "react-native";
+import { imagePath } from "../../constants";
 
 interface IintroMoviesData {
   title: string;
@@ -12,7 +13,7 @@ const IntroSelectMovies: React.FC<IintroMoviesData> = (props) => {
   return (
     <TouchableOpacity onPress={props.onSelection}>
       <View style={style.main}>
-        <Image style={style.image} source={{ uri: props.poster_path }} />
+        <Image style={style.image} source={{ uri: imagePath+props.poster_path }} />
       </View>
     </TouchableOpacity>
   );
