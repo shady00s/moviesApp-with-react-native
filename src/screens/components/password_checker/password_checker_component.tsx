@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
-import { View, StyleSheet, Text, Dimensions, Easing, ScrollView } from "react-native";
+import { View,UIManager, findNodeHandle , StyleSheet, Text, Dimensions, Easing, ScrollView, NativeModules, NativeEventEmitter } from "react-native";
 import React from "react";
 import { subBackGround } from "../../../constants";
 import reducer from "./reducer";
@@ -11,16 +11,60 @@ const width = Dimensions.get("screen").width;
 
 const PasswordCheckerComponent: React.FC<Ipassword> = (props) => {
   const containerRef = useRef(new Animated.Value(0)).current
-  const startPageAnimation = useRef(new Animated.Value(0)).current
+  const heightAnimation = useRef(new Animated.Value(0)).current
+  const showDetailsheightAnimation = useRef(new Animated.Value(0)).current
   const [targetIndex, setTargetIndex] = useState(0)
   const [text, setText] = useState("very weak");
   const [color, setColor] = useState("red");
   const [powerStrengthStyle, setPowerStrengthStyle] = useState<string[]>([subBackGround, subBackGround, subBackGround, subBackGround, subBackGround]);
-
+  const errorsRef = useRef(null)
 
   const [state, dispatch] = useReducer(reducer, []);
 
 
+  useEffect(()=>{
+
+    if (errorsRef.current) {
+      errorsRef.current.measure((x, y, width, height) => {
+        console.log('Component height:', height);
+      });
+    }
+
+  },[props.password])
+  useEffect(()=>{
+
+    if(props.password !== ""){
+      Animated.timing(heightAnimation,{
+        useNativeDriver:false,
+        toValue:!props.showDetails?Dimensions.get("screen").height * 0.05:250,
+        duration:120
+      }).start()
+
+    }else{
+      Animated.timing(heightAnimation,{
+        useNativeDriver:false,
+        toValue:0 ,
+        duration:120
+      }).start()
+    }
+  },[props.password,props.showDetails])
+
+  useEffect(()=>{
+    if(props.showDetails){
+      Animated.timing(showDetailsheightAnimation,{
+        useNativeDriver:false,
+        toValue:1 ,
+        duration:120
+      }).start()
+
+    }else{
+      Animated.timing(showDetailsheightAnimation,{
+        useNativeDriver:false,
+        toValue:0 ,
+        duration:80
+      }).start()
+    }
+  },[props.showDetails])
 
   const containerStartAnimation = (color: string[]) => {
     Animated.timing(containerRef, {
@@ -90,45 +134,41 @@ const PasswordCheckerComponent: React.FC<Ipassword> = (props) => {
 
   }, [state]);
   return (
-    <View
+    <Animated.View
       style={[
-        props.password === ""
-          ? { ...style.hideContainer }
-          : { ...style.mainContainer },
+       
+           { ...style.mainContainer,height:heightAnimation },
       ]}
     >
       <View style={style.indecatorContainer}>
-        <View
+        <Animated.View
           style={[
-            props.password === ""
-              ? { ...style.hideContainer }
-              : { ...style.checkerContainer },
+            { ...style.checkerContainer,},
           ]}
         >
 
-         
           {powerStrengthStyle.map((data, index) => (
             <Animated.View
               key={index}
               style={{
                 ...style.containerInitStyle, backgroundColor: containerRef.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [data, powerStrengthStyle[targetIndex]],
+                  outputRange: [powerStrengthStyle[index], data],
 
                 })
               }}
             ></Animated.View>
           ))}
-        </View>
+        </Animated.View>
         <Text style={{ color, fontFamily: "normal" }}>{text}</Text>
       </View>
-      <View style={[{...style.errorTextContainer,height:props.showDetails?"auto":0}]}>
+      <Animated.View  style={[{...style.errorTextContainer,opacity:showDetailsheightAnimation}]}>
         {state.map((data) => (
           <ErrorTextComponent key={data.id} error={data.errorText} color={data.errorColor} icon={data.errorColor === "red" ? "close-outline" : "warning-outline"} />
         ))}
 
-      </View>
-    </View>
+      </Animated.View>
+    </Animated.View>
   );
 };
 const style = StyleSheet.create({
@@ -144,7 +184,7 @@ const style = StyleSheet.create({
     display: "none",
     padding: 0,
     margin: 0,
-    height: 0,
+   
     width: 0,
   },
   indecatorContainer: {
@@ -176,4 +216,4 @@ const style = StyleSheet.create({
   },
 });
 
-export default React.memo(PasswordCheckerComponent)
+export default PasswordCheckerComponent

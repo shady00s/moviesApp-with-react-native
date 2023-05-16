@@ -1,5 +1,5 @@
-import { View,Text, FlatList } from "react-native"
-import React, { useCallback, useContext, useEffect, useState } from "react"
+import { View,Text, FlatList ,Animated, Dimensions} from "react-native"
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { StyleSheet } from "react-native"
 import axiosInstance from "../../../instance"
 import IntroSelectMovies from "../../components/intro_select_movies"
@@ -13,13 +13,21 @@ const SetFavoriteMoviesComponent:React.FC = ()=>{
     const [movies,setMovies] = useState([])
     const [selectedMovies,setSelectedMovies] = useState(new Set([]))
     const {themeData} = useContext(ThemeContext)
+    const heightAnimation = useRef(new Animated.Value(0)).current
     const getMoviesData = useCallback( async ()=>{
-        
-        await axiosInstance.get('/getIntroSelectMovies').then(data=>{
+        await axiosInstance.get('/getIntroSelectMovies',{params:{region:"EG",language:"eg-US"}}).then(data=>{
             setMovies(data.data.data)
         }).catch(err=>{console.log(err);})
     },[])
 
+    useEffect(()=>{
+        Animated.timing(heightAnimation,{
+            useNativeDriver:false,
+            duration:120,
+            toValue:selectedMovies.size ==0? Dimensions.get("screen").height * 0.04: Dimensions.get("screen").height * 0.12,
+
+        }).start()
+    },[selectedMovies])
     function selectedMoviesHandler(movieData){
         let newSelectedMovies = selectedMovies;
 
@@ -31,7 +39,7 @@ const SetFavoriteMoviesComponent:React.FC = ()=>{
 
     function removeSelectedMoviesHandler(movieData){
         let newSelectedMovies = selectedMovies;
-        if(newSelectedMovies.has(movieData)){
+        if(newSelectedMovies.has(movieData) || newSelectedMovies.has(movieData.category)){
             newSelectedMovies.delete(movieData)
             setSelectedMovies(()=>new Set(newSelectedMovies))
 
@@ -51,14 +59,14 @@ const SetFavoriteMoviesComponent:React.FC = ()=>{
                     scrollEnabled numColumns={2} data={movies} renderItem={(data)=><IntroSelectMovies onSelection={()=>{selectedMoviesHandler(data.item)}} title={data.item.title} key={data.index} poster_path={data.item.poster_path} selected={false}/>}/>
                 </View>
                  {/* categories container */}
-                 <View >
+                 <Animated.View style={{height:heightAnimation}}>
                         <Text style={[style.title,themeData === "light"? textLightColorStyle:{}]}>You love</Text>
                         <View style={style.selectedMoviesContainer}>
                         {[...selectedMovies].map((data:any,index)=> <TouchableOpacity key={index} onPress={()=>{removeSelectedMoviesHandler(data)}} style={{borderRadius:21}}><Text style={[style.category,themeData === "light"?{backgroundColor:lightbackground,color:darkYellowColor}:{}]} >{data.category}</Text></TouchableOpacity>)}
 
                         </View>
 
-                     </View>
+                     </Animated.View>
                 <View style={{height:"15%"}}>
                   <StepperNavButton screensNumber={4} navToNextPage={true} isMiddle={true} onNext={function (): void {
                     
@@ -100,6 +108,7 @@ const style = StyleSheet.create({
         paddingVertical:5,
         paddingHorizontal:8,
         justifyContent:"center",
+        alignItems:"center",
         borderRadius:21,
         backgroundColor:subBackGround,
         color:yellowColor
