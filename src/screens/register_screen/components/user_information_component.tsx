@@ -2,16 +2,9 @@ import {
   View,
   Text,
   StyleSheet,
-  Modal,
-  TextInput,
-  Image,
   TouchableOpacity,
-  TouchableWithoutFeedback,
-  ScrollView,
   Dimensions,
-  Platform,
-  Animated, KeyboardAvoidingView,
-  Easing,
+  Animated, 
 } from "react-native";
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import {
@@ -32,6 +25,7 @@ import globalStyle from "../../components/global_styles";
 import ThemeContext from "../../../context/theme_context";
 import { subTextLightColorStyle, textLightColorStyle } from "../global_styles";
 import axiosInstance from "../../../instance";
+import StorageManagerHandeler from "../../../utils/storage_manager";
 const height = Dimensions.get("screen").height;
 
 
@@ -45,6 +39,9 @@ interface IinputError {
 }
 const UserIformationComponent: React.FC = () => {
   const initAnimation = useRef(new Animated.Value(0)).current;
+  const nameheightAnimation = useRef(new Animated.Value(0)).current;
+  const emailheightAnimation = useRef(new Animated.Value(0)).current;
+  const confirmPassheightAnimation = useRef(new Animated.Value(0)).current;
   const { themeData } = useContext(ThemeContext)
 
   const navigation = useNavigation<any>();
@@ -52,6 +49,13 @@ const UserIformationComponent: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+
+  const [userData,setUserData] = useState({
+    name:"",
+    email:"",
+    password:"",
+    confirmPassword:""
+  })
   const [passwordDetails, setPasswordDetails] = useState(false)
 
   const [inputError, setInputError] = useState<IinputError>({
@@ -101,10 +105,12 @@ const UserIformationComponent: React.FC = () => {
 
   const nameValidationChecker = useCallback(() => {
     // check for name and surname that every name length can be at least 2 and contain only *'* and *-*
-    const nameRegExp = /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/
-    if (name.length === 0 || nameRegExp.test(name)) {
+    const nameRegExp = /^([a-zA-Z'_\s]{2,})/g
+    if (name.length === 0 ) {
       setInputError((prevState) => ({ ...prevState, name: true }));
 
+    }if(!nameRegExp.test(name)){
+      setInputError((prevState) => ({ ...prevState, name: true }));
     }
     else {
       setInputError((prevState) => ({ ...prevState, name: false }));
@@ -118,6 +124,13 @@ const UserIformationComponent: React.FC = () => {
       useNativeDriver: true,
     }).start();
   }, []);
+
+
+  useEffect(()=>{
+    let data = JSON.stringify(userData)
+    StorageManagerHandeler.setPageData("userData",data)
+  },[userData])
+
   useEffect(() => {
     if (inputError.email === false && inputError.name === false && inputError.noImage === false && inputError.password === false) {
       setPassToNextPage(true)
@@ -125,11 +138,56 @@ const UserIformationComponent: React.FC = () => {
       setPassToNextPage(false)
      
     }
-  }, [inputError])
+    if(inputError.name ===true){
+      Animated.timing(nameheightAnimation,{
+        useNativeDriver:false,
+        toValue:Dimensions.get("screen").height * 0.07,
+        duration:120
+      }).start();
+    }else{
+      Animated.timing(nameheightAnimation,{
+        useNativeDriver:false,
+        toValue:0,
+        duration:120
+      }).start();
+    }
+    if (inputError.email || inputError.usedEmail) {
+      Animated.timing(emailheightAnimation,{
+        useNativeDriver:false,
+        toValue:Dimensions.get("screen").height * 0.06,
+        duration:120
+      }).start();
+    }else{
+      Animated.timing(emailheightAnimation,{
+        useNativeDriver:false,
+        toValue:0,
+        duration:120
+      }).start();
+    }
 
+    if (inputError.confirmPassword) {
+      Animated.timing(confirmPassheightAnimation,{
+        useNativeDriver:false,
+        toValue:Dimensions.get("screen").height * 0.06,
+        duration:120
+      }).start();
+    }else{
+      Animated.timing(confirmPassheightAnimation,{
+        useNativeDriver:false,
+        toValue:0,
+        duration:120
+      }).start();
+    }
+
+    }, [inputError])
+
+    
+
+ 
   return (
-
-    <KeyboardAwareScrollView contentContainerStyle={{ flexGrow: 1 }}>
+<Animated.View>
+    <View style={{flex:0.8}}>
+    <KeyboardAwareScrollView contentContainerStyle={{ flexGrow: 0.8 }}>
       <Animated.View style={[style.titleContainer, { opacity: initAnimation }]}>
         <Text style={[globalStyle.title, themeData === "light" ? textLightColorStyle : {}]}>Complete your profile</Text>
         <Text style={[globalStyle.subTitle, themeData === "light" ? subTextLightColorStyle : {}]}>
@@ -150,13 +208,16 @@ const UserIformationComponent: React.FC = () => {
       <Animated.View
         style={{ opacity: initAnimation }}
       >
-        <InputTextComponent onChange={(data) => { setName(data) }} placeholder="Name" onBlur={() => { nameValidationChecker() }} />
-        <View style={{
-          height: inputError.name ?
-            "auto" : 0
+        <InputTextComponent onChange={(data) => { 
+          setName(data)
+           setUserData((prev)=>({...prev,name:data}))
+          }} placeholder="Name" onBlur={() => { nameValidationChecker() }} />
+        <Animated.View style={{
+          height: 
+            nameheightAnimation 
         }}>
           <ErrorTextComponent error={name.length === 0 ? "Please type your name" : "please check your name and the only allowed characters are ' _"} color="red" icon={"close-outline"} />
-        </View>
+        </Animated.View>
         <InputTextComponent
           onBlur={() => {
             emailValidationChecker()
@@ -164,19 +225,28 @@ const UserIformationComponent: React.FC = () => {
           }}
           onChange={(data) => {
             setEmail(data);
+            setUserData((prev)=>({...prev,email:data}))
+
           }}
           placeholder="Email"
         />
-        <View style={{
-          height: inputError.email || inputError.usedEmail?
-            "auto" : 0
+        <Animated.View style={{
+          height:
+          emailheightAnimation 
         }}>
           <ErrorTextComponent error={inputError.usedEmail?"This email is already used": "Please check your email address" }color="red" icon={"close-outline"} />
-        </View>
+        </Animated.View>
         <InputTextComponent
-          onBlur={() => { setPasswordDetails(true) }}
+          onBlur={() => {
+            setPasswordDetails(true)
+          
+        
+        }}
+
           onChange={(data) => {
             setPassword(data);
+            setUserData((prev)=>({...prev,password:data}))
+
           }}
           placeholder="Password"
           isPassword
@@ -185,15 +255,20 @@ const UserIformationComponent: React.FC = () => {
         <InputTextComponent
           onBlur={() => { confirmPasswordChecker() }}
           isPassword
-          onChange={(data) => { setConfirmPassword(data) }}
+          onChange={(data) => { 
+            setConfirmPassword(data) 
+            setUserData((prev)=>({...prev,confirmPassword:data}))
+
+          
+          }}
           placeholder="Confirm password"
         />
-        <View style={{
-          height: inputError.confirmPassword ?
-            "auto" : 0
+        <Animated.View style={{
+          height:
+          confirmPassheightAnimation 
         }}>
           <ErrorTextComponent error="Please check your email address" color="red" icon={"close-outline"} />
-        </View>
+        </Animated.View>
         <View>
           <View style={style.registerContainer}>
             <Text style={[style.regText, themeData === "light" ? textLightColorStyle : {}]}>Already have account?</Text>
@@ -215,6 +290,13 @@ const UserIformationComponent: React.FC = () => {
 
       </Animated.View>
          
+
+
+    </KeyboardAwareScrollView>
+
+    </View>
+    <View style={{flex:0.1}}>
+
       <StepperNavButton isMiddle={false} navToNextPage={true} screensNumber={4} onNext={async function (): Promise<void> {
         console.log(passToNextPage);
         
@@ -225,15 +307,12 @@ const UserIformationComponent: React.FC = () => {
           nameValidationChecker()
          }
 
-
         } } />
-
-
-    </KeyboardAwareScrollView>
-
+    </View>
 
 
 
+</Animated.View>
   );
 };
 

@@ -22,10 +22,7 @@ import StepperPaginationContext from "./context/stepper_pagination_context";
 import { Animated } from "react-native";
 import MainViewComponent from "../main_view_component";
 import ThemeContext from "../../../context/theme_context";
-
-
-
-
+import StorageManagerHandeler from "../../../utils/storage_manager";
 
 
 // separator line
@@ -126,6 +123,9 @@ const Stepper: React.FC<stepperModel> = (props) => {
 
     changeIndexByNavButtons()
   }, [page.currentIndex, themeData])
+
+  useEffect(()=>{
+  },[selectedIndex])
   return (
     <>
       <SafeAreaView style={{ paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0 }}>
