@@ -316,8 +316,6 @@ const UserIformationComponent: React.FC = () => {
   );
 };
 
-export default React.memo(UserIformationComponent);
-
 const style = StyleSheet.create({
   titleContainer: {
     paddingHorizontal: 21,
@@ -353,3 +351,6 @@ const style = StyleSheet.create({
 
 
 });
+export default React.memo(UserIformationComponent);
+
+

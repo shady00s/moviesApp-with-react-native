@@ -107,7 +107,7 @@ export default  function passwordValidationCallback(password:string,state:Ierror
           payload: {
             id: Math.random(),
             errorType: passwordLengthTest.testType,
-            errorText: "Password must contain at least 8 characters.",
+            errorText: "Password must contain at least eight characters.",
             errorColor: "red",
           },
         });

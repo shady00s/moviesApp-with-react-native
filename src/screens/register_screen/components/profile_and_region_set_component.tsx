@@ -5,7 +5,6 @@ import {
   Switch,
   TouchableOpacity,
   Dimensions,
-  SwitchChangeEvent,
 } from "react-native";
 import DropdownComponent from "../../components/Dropdown_country_component";
 import StepperNavButton from "../../components/stepper/stepper_nav_button";
@@ -22,11 +21,12 @@ import  * as Location  from 'expo-location';
 import { CountryCode } from "react-native-country-picker-modal";
 import ThemeContext from "../../../context/theme_context";
 import { subTextLightColorStyle, textLightColorStyle } from "../global_styles";
+import React from "react";
 interface IuserData{
     themeIsDark:boolean,
     region:CountryCode
 }
-export default function ProfileAndRegionSetComponent() {
+const ProfileAndRegionSetComponent =()=>{
   const [userData, setUserData] = useState<IuserData>({
     themeIsDark:true,
     region:"EG"
@@ -309,3 +309,4 @@ const style = StyleSheet.create({
     backgroundColor: yellowColor,
   },
 });
+export default React.memo(ProfileAndRegionSetComponent)

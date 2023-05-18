@@ -4,7 +4,8 @@ import ThemeContext from '../../../context/theme_context';
 import { subTextLightColorStyle, textLightColorStyle } from '../global_styles';
 import { lightGrayColor, subBackGround, whiteColor, yellowColor } from '../../../constants';
 import  Ionicons  from '@expo/vector-icons/Ionicons';
-export default function FinishRegComponet() {
+import React from 'react';
+ const  FinishRegComponet =()=> {
     const {themeData} = useContext(ThemeContext)
     return (<><View>
         <View style={{flexDirection:"row",alignItems:"center"}}>
@@ -45,3 +46,5 @@ const style = StyleSheet.create({
 
     }
 })
+
+export default FinishRegComponet
