@@ -1,18 +1,20 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 class StorageManagerHandeler {
-  static  getPageData = async (pageId: string) => {
+  static  getPageData = async (pageId: string):Promise<string> => {
         try {
+            let resultData =""
             await AsyncStorage.getItem(pageId, ((error, result) => {
                 if (error) {
-                    return false
-                } else {
-                    return result
-                }
+                    console.log(error);
+                } 
+                    resultData = result
+                
             }))
+            return resultData
         } catch (error) {
             console.log(error);
-            return false
+            return error
         }
 
     }

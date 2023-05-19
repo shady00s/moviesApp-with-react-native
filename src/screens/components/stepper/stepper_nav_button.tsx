@@ -1,7 +1,7 @@
-import { View, TouchableOpacity, Text, StyleSheet, Dimensions } from "react-native";
+import { View, TouchableOpacity, Text, StyleSheet, Dimensions, Animated } from "react-native";
 import { darkYellowColor, subBackGround, yellowColor } from "../../../constants";
 import Ionicons from '@expo/vector-icons/Ionicons';
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import StepperPaginationContext from "./context/stepper_pagination_context";
 import ThemeContext from "../../../context/theme_context";
 import { textLightColorStyle } from './../../register_screen/global_styles';
@@ -13,11 +13,28 @@ const StepperNavButton: React.FC<IstepperNavButton> = (props) => {
   const { page, setPage } = useContext(StepperPaginationContext)
   const [showError, setShowError] = useState(false)
   const {themeData} = useContext(ThemeContext)
+  const errorHeight = useRef(new Animated.Value(0)).current
+
+
   useEffect(() => {
+
+    
     if (showError) {
       setTimeout(() => {
+
         setShowError(false)
       }, 3000)
+      Animated.timing(errorHeight,{
+        useNativeDriver:false,
+        toValue:0,
+        duration:120
+      }).start()
+    }else{
+      Animated.timing(errorHeight,{
+        useNativeDriver:false,
+        toValue:0,
+        duration:120
+      }).start()
     }
 
   }, [showError])
@@ -63,9 +80,9 @@ const StepperNavButton: React.FC<IstepperNavButton> = (props) => {
              props.onNext()
              }}>
             <View style={style.nextButton}>
-              {showError ? <View style={style.errorContainer}><Text
+              {showError ? <Animated.View style={{...style.errorContainer}}><Text
                 style={style.errorText}
-              >You need to complete the required data to continue</Text></View> :
+              >You need to complete the required data to continue</Text></Animated.View> :
                <><Text style={{...style.nextText,color:themeData==="dark"?yellowColor:darkYellowColor}}>Next</Text>
                <Ionicons color={yellowColor} name="arrow-forward-outline" /></>
                      
@@ -78,23 +95,24 @@ const StepperNavButton: React.FC<IstepperNavButton> = (props) => {
 
       ) : (
         <View style={style.nextContainer}>
+            <View style={{...style.nextButton,height:Dimensions.get("screen").height *0.12}}>
+            {showError ? <Animated.View style={{...style.errorContainer}}><Text
+                style={style.errorText}
+              >You need to complete the required data to continue</Text></Animated.View> :
           <TouchableOpacity  onPress={() => { 
             handleNextPage() 
             props?.onNext()
             }}>
-            <View style={{...style.nextButton,height:Dimensions.get("screen").height *0.1}}>
-            {showError ? <View style={style.errorContainer}><Text
-                style={style.errorText}
-              >You need to complete the required data to continue</Text></View> :
-               <><Text style={{...style.nextText,color:themeData==="dark"?yellowColor:darkYellowColor}}>Next</Text>
+            <View style={{flexDirection:"row",justifyContent:"center"}}>
+               <Text style={{...style.nextText,color:themeData==="dark"?yellowColor:darkYellowColor}}>Next</Text>
             <Ionicons color={yellowColor} size={16} name="arrow-forward-outline" />
-            </>
-    
+          
+
+            </View>
+          </TouchableOpacity>
 }
 
             </View>
-
-          </TouchableOpacity>
         </View>
       )}
 

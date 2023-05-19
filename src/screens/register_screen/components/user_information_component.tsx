@@ -8,8 +8,6 @@ import {
 } from "react-native";
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import {
-  backgroundColor,
-  subBackGround,
   whiteColor,
   yellowColor,
 } from "../../../constants";
@@ -297,7 +295,7 @@ const UserIformationComponent: React.FC = () => {
     </View>
     <View style={{flex:0.1}}>
 
-      <StepperNavButton isMiddle={false} navToNextPage={true} screensNumber={4} onNext={async function (): Promise<void> {
+      <StepperNavButton isMiddle={false} navToNextPage={false} screensNumber={4} onNext={async function (): Promise<void> {
         console.log(passToNextPage);
         
         if(!passToNextPage){
