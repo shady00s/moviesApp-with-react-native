@@ -15,7 +15,7 @@ export default function App() {
     const [themeData,setThemeData] = useState("dark")
 
     const themeDataValue = useMemo(()=>({themeData,setThemeData}),[themeData])
-  if (!loaded) {
+  if (!loaded || !themeData) {
     return (
       <>
       <StatusBar backgroundColor={backgroundColor} style={'light'}/>

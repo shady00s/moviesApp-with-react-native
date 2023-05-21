@@ -25,6 +25,7 @@ const containerRef = new Animated.Value(0); // Move outside the component
 
 const PasswordCheckerComponent: React.FC<Ipassword> = (props) => {
   const heightAnimation = useRef(new Animated.Value(0)).current;
+  const hideAnimation = useRef(new Animated.Value(0)).current;
   const showDetailsheightAnimation = useRef(new Animated.Value(0)).current;
   const [targetIndex, setTargetIndex] = useState(0);
   const [text, setText] = useState("very weak");
@@ -46,8 +47,19 @@ const PasswordCheckerComponent: React.FC<Ipassword> = (props) => {
         duration: 130,
         useNativeDriver:false
       }).start();
+      Animated.timing(hideAnimation, {
+        toValue: state.length !==0?((Dimensions.get("screen").height *0.07 * state.length)+15):45,
+        duration: 1,
+        useNativeDriver:false
+      }).start();
     } else {
       Animated.timing(heightAnimation, {
+        toValue: 0,
+        duration: 120,
+        useNativeDriver:false
+
+      }).start();
+      Animated.timing(hideAnimation, {
         toValue: 0,
         duration: 120,
         useNativeDriver:false
@@ -145,7 +157,7 @@ const PasswordCheckerComponent: React.FC<Ipassword> = (props) => {
     <Animated.View
       style={[
         style.mainContainer,
-        { height: heightAnimation },
+        { height: heightAnimation,opacity:hideAnimation },
       ]}
     >
       <View style={style.indicatorContainer}>
@@ -179,9 +191,10 @@ const style = StyleSheet.create({
     margin: 2,
     padding: 3,
     overflow: "scroll",
-    width: "85%",
+    width: "90%",
     flexDirection: "column",
     alignItems: "center",
+    justifyContent:"center"
   },
   hideContainer: {
     display: "none",

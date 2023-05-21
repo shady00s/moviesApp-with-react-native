@@ -8,12 +8,15 @@ import StepperNavButton from "../../components/stepper/stepper_nav_button"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import ThemeContext from "../../../context/theme_context"
 import { subTextLightColorStyle, textLightColorStyle } from "../global_styles"
+import ErrorTextComponent from "../../components/error_text_component"
 
 const SetFavoriteMoviesComponent:React.FC = ()=>{
     const [movies,setMovies] = useState([])
     const [selectedMovies,setSelectedMovies] = useState(new Set([]))
+    const [navToNextScreen,setNavToNextScreen] = useState(false)
     const {themeData} = useContext(ThemeContext)
     const heightAnimation = useRef(new Animated.Value(0)).current
+    const errorheightAnimation = useRef(new Animated.Value(0)).current
     const getMoviesData = useCallback( async ()=>{
         await axiosInstance.get('/getIntroSelectMovies',{params:{region:"EG",language:"eg-US"}}).then(data=>{
             setMovies(data.data.data)
@@ -27,6 +30,16 @@ const SetFavoriteMoviesComponent:React.FC = ()=>{
             toValue:selectedMovies.size ==0? Dimensions.get("screen").height * 0.04: Dimensions.get("screen").height * 0.12,
 
         }).start()
+
+        if(selectedMovies.size === 4){
+            Animated.timing(errorheightAnimation,{
+                useNativeDriver:false,
+                toValue:0,
+                duration:120
+            }).start(()=>{
+                setNavToNextScreen(true)
+            })
+        }
     },[selectedMovies])
     function selectedMoviesHandler(movieData){
         let newSelectedMovies = selectedMovies;
@@ -62,14 +75,27 @@ const SetFavoriteMoviesComponent:React.FC = ()=>{
                  <Animated.View style={{height:heightAnimation}}>
                         <Text style={[style.title,themeData === "light"? textLightColorStyle:{}]}>You love</Text>
                         <View style={style.selectedMoviesContainer}>
-                        {[...selectedMovies].map((data:any,index)=> <TouchableOpacity key={index} onPress={()=>{removeSelectedMoviesHandler(data)}} style={{borderRadius:21}}><Text style={[style.category,themeData === "light"?{backgroundColor:lightbackground,color:darkYellowColor}:{}]} >{data.category}</Text></TouchableOpacity>)}
+                        {Array.from(selectedMovies).map((data:any,index)=> <TouchableOpacity key={index} onPress={()=>{removeSelectedMoviesHandler(data)}} style={{borderRadius:21}}><View><Text style={[style.category,themeData === "light"?{backgroundColor:lightbackground,color:darkYellowColor}:{}]} >{data.category}</Text></View></TouchableOpacity>)}
 
                         </View>
 
                      </Animated.View>
+                     <Animated.View style={{
+          height:
+          errorheightAnimation 
+        }}>
+          <ErrorTextComponent error="Please select 4 movies" color="red" icon={"close-outline"} />
+        </Animated.View>
                 <View style={{height:"15%"}}>
-                  <StepperNavButton screensNumber={4} navToNextPage={true} isMiddle={true} onNext={function (): void {
-                    
+                  <StepperNavButton screensNumber={4} navToNextPage={navToNextScreen} isMiddle={true} onNext={function (): void {
+
+                        if(selectedMovies.size < 4){
+                            Animated.timing(errorheightAnimation,{
+                                useNativeDriver:false,
+                                toValue:54,
+                                duration:120
+                            }).start()
+                        }
                 } } />
 
                   </View>

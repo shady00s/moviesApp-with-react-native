@@ -15,16 +15,26 @@ export default function MainViewComponent({ children,style,newwhiteColor,newBlac
   const animation = useRef(new Animated.Value(0)).current;
   
   useEffect(()=>{
-        Animated.timing(animation, {
-            useNativeDriver: false,
-            duration: 100,
-            toValue: themeData === "light"?0:1,
-          }).start(()=>{ Animated.timing(animation, {
-            useNativeDriver: false,
-            duration: 100,
-            toValue: themeData === "light"?1:0,
-          }).start();});
+    if(themeData === "dark"){
+      Animated.timing(animation, {
+        useNativeDriver: false,
+        duration: 100,
+        toValue: 0,
+      }).start();
 
+    }else{
+      Animated.timing(animation, {
+        useNativeDriver: false,
+        duration: 100,
+        toValue: 0,
+      }).start(()=>{ Animated.timing(animation, {
+        useNativeDriver: false,
+        duration: 100,
+        toValue: 1
+      }).start();});
+
+    }
+        
   },[themeData])
   
   

@@ -6,7 +6,6 @@ import { lightGrayColor, subBackGround, whiteColor, yellowColor } from '../../..
 import  Ionicons  from '@expo/vector-icons/Ionicons';
 import React from 'react';
 import StorageManagerHandeler from '../../../utils/storage_manager';
-import AsyncStorage from '@react-native-async-storage/async-storage';
  const  FinishRegComponet =()=> {
     const {themeData} = useContext(ThemeContext)
     const [userName,setUserName] = useState("")
